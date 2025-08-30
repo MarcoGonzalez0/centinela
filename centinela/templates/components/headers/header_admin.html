@@ -1,0 +1,22 @@
+<!-- templates/components/headers/header_admin.html -->
+{% extends 'components/headers/header_base.html' %}
+
+{% block header_title %}
+    <h1 class="text-xl font-bold">Hola admin <span class="font-light hover:text-blue-200">{{ user.get_full_name|default:user.username }} !</span></h1>
+{% endblock %}
+
+{% block header_links %}
+    {% with link_class="text-xl hover:text-gray-200 transition-transform duration-200 hover:scale-105" %}
+    <a href="{% url 'index_view' %}" class="{{ link_class }}">Escanear | </a>
+    <a href="{% url 'admin:dashboard' %}" class="{{ link_class }}">Dashboard | </a>
+    <a href="{% url 'admin:users' %}" class="{{ link_class }}">Usuarios | </a>
+    <a href="{% url 'admin:escaneos' %}" class="{{ link_class }}">Escaneos | </a>
+    <a href="{% url 'admin:profile' %}" class="{{ link_class }}">Perfil | </a>
+    {% endwith %}
+{% endblock %}
+
+{% block user_actions %}
+    <a href="{% url 'logout_view' %}" class="bg-red-700 hover:bg-red-800 px-3 py-1 rounded text-sm">
+        Cerrar Sesión
+    </a>
+{% endblock %}

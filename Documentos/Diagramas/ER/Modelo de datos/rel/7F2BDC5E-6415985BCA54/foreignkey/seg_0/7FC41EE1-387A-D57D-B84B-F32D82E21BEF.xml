@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="7FC41EE1-387A-D57D-B84B-F32D82E21BEF" containerWithKeyObject="D212AC8B-67AB-73C1-EBF2-CFF5CBDA7CC1" localFKIndex="2CBC0502-37CF-9A8D-DF49-E2220AAE3803" name="resultadomodulo_escaneo_FK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>01D62380-452E-E811-A62B-21308BB65B70</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<referredTableLongName>escaneo</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>1FF2E326-6188-74A3-A5D6-40955EEC909D</referredTableID>
+<keyObject>4625A52F-7203-F676-CFF5-EBB06F1D95D4</keyObject>
+<referredKeyID>4625A52F-7203-F676-CFF5-EBB06F1D95D4</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>escaneo_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

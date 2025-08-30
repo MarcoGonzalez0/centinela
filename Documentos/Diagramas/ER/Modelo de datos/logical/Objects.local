@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.logical.LogicalDesign>
+   <object objectType="Entity" objectID="B0016FA1-0289-60B4-169C-5A5E0AF4DF0C" name="escaneo" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.design.logical.Entity" propertyParentId="44978F56-7419-9AE5-0C79-72F91068B1D6" propertySourceId="" propertyTargetId=""/>
+   <object objectType="Entity" objectID="8C970D64-9A66-CAD7-381A-79A285EBA642" name="resultadomodulo" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.design.logical.Entity" propertyParentId="44978F56-7419-9AE5-0C79-72F91068B1D6" propertySourceId="" propertyTargetId=""/>
+   <object objectType="Entity" objectID="EB60DDD4-3C45-8EFD-41C3-A74B146018CA" name="usuario" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.design.logical.Entity" propertyParentId="44978F56-7419-9AE5-0C79-72F91068B1D6" propertySourceId="" propertyTargetId=""/>
+   <object objectType="Relation" objectID="5A6AC930-78AA-B714-931F-47CF9FBAFFB1" name="Relation_1" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.design.logical.Relation" propertyParentId="44978F56-7419-9AE5-0C79-72F91068B1D6" propertySourceId="EB60DDD4-3C45-8EFD-41C3-A74B146018CA" propertyTargetId="B0016FA1-0289-60B4-169C-5A5E0AF4DF0C"/>
+   <object objectType="Relation" objectID="01D62380-452E-E811-A62B-21308BB65B70" name="Relation_2" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.design.logical.Relation" propertyParentId="44978F56-7419-9AE5-0C79-72F91068B1D6" propertySourceId="B0016FA1-0289-60B4-169C-5A5E0AF4DF0C" propertyTargetId="8C970D64-9A66-CAD7-381A-79A285EBA642"/>
+</oracle.dbtools.crest.model.design.logical.LogicalDesign>

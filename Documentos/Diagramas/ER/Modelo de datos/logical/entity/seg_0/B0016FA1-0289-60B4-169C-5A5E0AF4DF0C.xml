@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B0016FA1-0289-60B4-169C-5A5E0AF4DF0C" name="escaneo">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:32:23 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="DBCF7E55-E75F-E47E-8CE2-135B15056231">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:32:36 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="objetivo" id="950A20CE-D404-C075-7F23-2C5D7BBEEC18">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:33:27 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>80</dataTypeSize>
+<ownDataTypeParameters>80,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="tipo_objetivo" id="690A6898-D704-B29F-9104-EC1904874840">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:33:44 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha_inicio" id="6DF64AFE-6EA2-9067-5392-41F9F744C28A">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:34:16 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha_fin" id="782511BA-26C9-750B-1C7D-0A3AD9A7E47D">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:34:55 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="estado" id="9765EC39-B935-60BB-876C-986D68DB420F">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:35:39 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>11</dataTypeSize>
+<ownDataTypeParameters>11,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id1" id="A599838F-259D-B7C0-FAA6-EA56D11D36BF">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:36:54 UTC</createdTime>
+<generatorID>5A6AC930-78AA-B714-931F-47CF9FBAFFB1</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<referedAttribute>4A3C3425-8C47-7057-AA4B-7AC9623E8B6D</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

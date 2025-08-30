@@ -1,0 +1,138 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1FF2E326-6188-74A3-A5D6-40955EEC909D" name="escaneo">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>B0016FA1-0289-60B4-169C-5A5E0AF4DF0C</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="6C01E347-B41B-8AD1-5355-0A18845809F7">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>DBCF7E55-E75F-E47E-8CE2-135B15056231</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="objetivo" id="1ACFE825-EC0E-1062-DC46-09C8EFF2437D">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>950A20CE-D404-C075-7F23-2C5D7BBEEC18</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>80</dataTypeSize>
+<ownDataTypeParameters>80,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tipo_objetivo" id="13691D42-EE7C-51C3-FF4E-17625FD589CF">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>690A6898-D704-B29F-9104-EC1904874840</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_inicio" id="A7FA5B80-17EF-1370-B514-8967E779685C">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>6DF64AFE-6EA2-9067-5392-41F9F744C28A</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_fin" id="9E4B318D-DA56-F170-21F1-D991B63EA9DF">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>782511BA-26C9-750B-1C7D-0A3AD9A7E47D</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado" id="B712A15D-A931-793C-489E-3E0169B0C3C6">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>9765EC39-B935-60BB-876C-986D68DB420F</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>11</dataTypeSize>
+<ownDataTypeParameters>11,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="usuario_id" id="F3510BDA-62A5-E3C9-6560-F76874D68781">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>A599838F-259D-B7C0-FAA6-EA56D11D36BF</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="51B8663F-EA58-C053-FC5A-ADAC4F95166E" referredColumn="D9B5D6DC-A37A-CE27-C3D4-020EAB0AE302"/>
+</associations>
+</Column>
+<Column name="escaneo_ID" id="0DE5B2B2-60D3-F48D-7E30-CC654E85C9DB">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isSurrogateColumn>true</isSurrogateColumn>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4625A52F-7203-F676-CFF5-EBB06F1D95D4" name="escaneo_PK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="0DE5B2B2-60D3-F48D-7E30-CC654E85C9DB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9B0F1E32-0559-FFE9-14EB-75C07DCDF347" name="escaneo_usuario_FK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>5A6AC930-78AA-B714-931F-47CF9FBAFFB1</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F3510BDA-62A5-E3C9-6560-F76874D68781"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

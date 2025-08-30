@@ -1,0 +1,67 @@
+<!-- templates/base/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Centinela - Escaneo de vulnerabilidades{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <link href="{% load static %}{% static 'css/output.css' %}" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen grid grid-rows-[auto_1fr_auto]">
+    <!-- Header dinámico basado en el tipo de usuario -->
+    {% if user.is_authenticated %}
+        {% if user.is_staff %}
+            {% include 'components/headers/header_admin.html' %}
+        {% else %}
+            {% include 'components/headers/header_user.html' %}
+        {% endif %}
+    {% else %}
+        {% include 'components/headers/header_guest.html' %}
+    {% endif %}
+
+    <!-- Contenido principal -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Mensajes del sistema -->
+        {% if messages %}
+        <div class="mb-4 flex justify-center">
+            {% for message in messages %}
+            <div class="alert px-4 py-2 rounded mb-2 text-center w-full max-w-md
+                {% if message.tags == 'success' %} bg-green-100 border-green-400 text-green-700
+                {% elif message.tags == 'error' %} bg-red-100 border-red-400 text-red-700
+                {% elif message.tags == 'warning' %} bg-yellow-100 border-yellow-400 text-yellow-700
+                {% else %} bg-gray-100 border-gray-400 text-gray-700
+                {% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer común -->
+    {% include 'components/footers/footer.html' %}
+
+    <!-- JavaScript -->
+    {% block extra_js %}
+    <script>
+    // Espera 4 segundos y luego oculta todos los mensajes
+    setTimeout(() => {
+        const messages = document.querySelectorAll('.alert');
+        messages.forEach(msg => {
+            msg.style.transition = 'opacity 0.5s';
+            msg.style.opacity = 0;
+            setTimeout(() => msg.remove(), 500); // eliminar del DOM
+        });
+    }, 4000); // 4000 ms = 4 segundos
+    </script>
+
+    {% endblock %}
+</body>
+</html>

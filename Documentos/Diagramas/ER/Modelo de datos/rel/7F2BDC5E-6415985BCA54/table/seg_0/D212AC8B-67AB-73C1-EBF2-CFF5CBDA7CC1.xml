@@ -1,0 +1,112 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D212AC8B-67AB-73C1-EBF2-CFF5CBDA7CC1" name="resultadomodulo">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>8C970D64-9A66-CAD7-381A-79A285EBA642</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="633F0B4D-6662-7B2C-4CFF-52250974598A">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>9063302D-4509-6B54-14E4-3CFB084EA837</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nombre_modulo" id="9EADAAB6-31DC-9298-DC63-82AC432A68B5">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>0CD4BBBA-9196-3BE0-D5BA-94B129FED2DE</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado" id="5EA2279A-000B-04C9-4101-A78A69CD8458">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>5EB08328-3557-2E21-945B-366616EB7080</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>11</dataTypeSize>
+<ownDataTypeParameters>11,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="resultado" id="6EA6B86D-D6E1-CD5C-477F-3A77B9EE240E">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>91693863-CFA6-E449-9FFE-F73D87B4E1EE</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>47823B89-BECE-2D4A-B641-EE3BE6149078</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_ejecucion" id="8ABD4149-779A-39C3-EC7B-7072A9897D6D">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>325CE280-2DC7-8159-F5A1-FC46DF7FB6E4</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="escaneo_escaneo_ID" id="36122BD9-2B63-5D5F-0E9E-ED256C660A42">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7FC41EE1-387A-D57D-B84B-F32D82E21BEF" referredColumn="0DE5B2B2-60D3-F48D-7E30-CC654E85C9DB"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="B20F6079-386A-7C73-8D5B-3B59214CEBD2" name="resultadomodulo_PK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>DA633C68-F43C-02BA-BE83-478ACA7CB490</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="633F0B4D-6662-7B2C-4CFF-52250974598A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2CBC0502-37CF-9A8D-DF49-E2220AAE3803" name="resultadomodulo_escaneo_FK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>01D62380-452E-E811-A62B-21308BB65B70</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="36122BD9-2B63-5D5F-0E9E-ED256C660A42"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

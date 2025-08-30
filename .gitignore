@@ -1,0 +1,32 @@
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Virtualenv
+venv/
+env/
+
+# Archivos de configuración locales
+*.env
+.env
+
+# Archivos de compilación
+*.log
+*.pot
+*.pyc
+
+# Archivos de Django
+media/
+staticfiles/
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+
+# Node.js
+node_modules/

@@ -1,0 +1,99 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="929A4F36-1B21-F1F5-8468-1EE59E74D2CA" name="usuario">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>EB60DDD4-3C45-8EFD-41C3-A74B146018CA</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="D9B5D6DC-A37A-CE27-C3D4-020EAB0AE302">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>4A3C3425-8C47-7057-AA4B-7AC9623E8B6D</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="email" id="09664EEB-4696-300F-9A03-7370956B7FDE">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>315BA2F9-524A-E01B-ADB9-DAD8DD488373</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="contrasena" id="A18100B9-68AC-70C4-EC24-BE1A8B845EF6">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>06407D53-19EC-0836-25B5-D23215B6AF63</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="es_admin" id="F588F3A8-220A-FBDC-2DCA-1D4385960435">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>818E1BE8-C92C-F1DA-7D32-E6C1444E62C0</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT042</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="acceso" id="D064D23E-F835-1D44-22DA-968947C36A3C">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>B0840CE2-BE48-CE0E-6261-38BC1B1B5A98</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT042</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="registrado_en" id="A5F9FD43-BC7F-8D92-09FB-F4C3E8D22B5C">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>F242AE69-6550-996A-4AF8-E0092A69DC39</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="FA3F8A6F-308E-FB83-6FED-A83AE822DBBC" name="usuario_PK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:39:10 UTC</createdTime>
+<generatorID>D053B2DA-2EB2-8600-BCB6-A439F669FEE4</generatorID>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D9B5D6DC-A37A-CE27-C3D4-020EAB0AE302"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

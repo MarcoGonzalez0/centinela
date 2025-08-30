@@ -1,0 +1,99 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8C970D64-9A66-CAD7-381A-79A285EBA642" name="resultadomodulo">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:37:22 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="9063302D-4509-6B54-14E4-3CFB084EA837">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:37:35 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nombre_modulo" id="0CD4BBBA-9196-3BE0-D5BA-94B129FED2DE">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:37:42 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="estado" id="5EB08328-3557-2E21-945B-366616EB7080">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:38:16 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>11</dataTypeSize>
+<ownDataTypeParameters>11,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="resultado" id="91693863-CFA6-E449-9FFE-F73D87B4E1EE">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:38:30 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>47823B89-BECE-2D4A-B641-EE3BE6149078</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha_ejecucion" id="325CE280-2DC7-8159-F5A1-FC46DF7FB6E4">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:38:42 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="DA633C68-F43C-02BA-BE83-478ACA7CB490" name="resultadomodulo PK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:37:40 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>9063302D-4509-6B54-14E4-3CFB084EA837</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

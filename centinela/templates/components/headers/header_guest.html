@@ -1,0 +1,19 @@
+<!-- templates/components/headers/header_guest.html -->
+{% extends 'components/headers/header_base.html' %}
+
+{% block header_title %}
+    <h1 class="text-xl font-bold">¡Bienvenido!</h1>
+{% endblock %}
+
+{% block header_links %}
+    {% with link_class="text-xl hover:text-gray-200 transition-transform duration-200 hover:scale-105" %}
+    <a href="{% url 'index_view' %}" class="{{ link_class }}">Escanear</a>
+    {% endwith %}
+{% endblock %}
+
+{% block user_actions %}
+    <a href="{% url 'auth_view' %}?form=login" class="text-gray-200 hover:text-white transition-transform duration-200 hover:scale-105">Iniciar Sesión</a>
+    <a href="{% url 'auth_view' %}?form=register" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition-transform duration-200 hover:scale-105">
+        Registrarse
+    </a>
+{% endblock %}

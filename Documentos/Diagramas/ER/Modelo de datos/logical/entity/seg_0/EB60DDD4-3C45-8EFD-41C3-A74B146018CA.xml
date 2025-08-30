@@ -1,0 +1,112 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="EB60DDD4-3C45-8EFD-41C3-A74B146018CA" name="usuario">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:21:10 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="4A3C3425-8C47-7057-AA4B-7AC9623E8B6D">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:21:19 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="email" id="315BA2F9-524A-E01B-ADB9-DAD8DD488373">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:24:39 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="contrasena" id="06407D53-19EC-0836-25B5-D23215B6AF63">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:24:53 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="es_admin" id="818E1BE8-C92C-F1DA-7D32-E6C1444E62C0">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:25:07 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT042</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="acceso" id="B0840CE2-BE48-CE0E-6261-38BC1B1B5A98">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:29:33 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT042</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="registrado_en" id="F242AE69-6550-996A-4AF8-E0092A69DC39">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:30:17 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D053B2DA-2EB2-8600-BCB6-A439F669FEE4" name="usuario PK">
+<createdBy>mgonz</createdBy>
+<createdTime>2025-07-22 01:21:25 UTC</createdTime>
+<ownerDesignName>Modelo de datos</ownerDesignName>
+<engineerTo>
+<item key="7F2BDC5E-9C78-454C-D5DF-6415985BCA54" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>4A3C3425-8C47-7057-AA4B-7AC9623E8B6D</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
