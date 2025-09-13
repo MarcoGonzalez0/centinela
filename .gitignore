@@ -30,3 +30,6 @@ staticfiles/
 
 # Node.js
 node_modules/
+
+# Carpeta de documentos
+Documentos/

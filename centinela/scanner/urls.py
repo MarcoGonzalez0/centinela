@@ -6,12 +6,21 @@ urlpatterns = [
     # Tus patrones de URL van aquí
     # Ejemplo:
     # path('', views.index, name='index'),
-    path('', views.index_view, name='index_view'),                                          #index que yo defino
-    path('auth/', views.auth_view, name='auth_view'),                                             #retorna la pagina sin mas
-    path('login/', views.LoginViewCustom.as_view(), name='login_view'),   #ocupa vista predefinida
-    path('register/', views.register_view, name='register_view'),                                 #vista que yo defino
-    path('logout/', views.logout_view, name='logout_view'),                                       #ocupa vista predefinida
+    path('', views.index_view, name='index_view'),                                          #index que yo defino, aqui va la busqueda y los graficos
+    path('auth/', views.auth_view, name='auth_view'),                                       #retorna la pagina sin mas
+    path('login/', views.LoginViewCustom.as_view(), name='login_view'),                     #ocupa vista predefinida
+    path('register/', views.register_view, name='register_view'),                           #vista que yo defino
+    path('logout/', views.logout_view, name='logout_view'),                                 #ocupa vista predefinida
 
+
+
+
+
+
+
+
+
+    # Las siguientes vistas son para configurar mas adelante
     # Vistas para recuperación de contraseña
     path('password-reset/', auth_views.PasswordResetView.as_view(
         template_name='password_reset.html'

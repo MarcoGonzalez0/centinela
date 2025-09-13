@@ -11,7 +11,10 @@
     
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen grid grid-rows-[auto_1fr_auto]">
+<body class="bg-gray-50 min-h-screen grid grid-rows-[auto_1fr_auto]"
+      style="background-image: url('/static/img/fondo-login-registro.jpg'); 
+             background-size: cover; 
+             background-position: center;">
     <!-- Header dinámico basado en el tipo de usuario -->
     {% if user.is_authenticated %}
         {% if user.is_staff %}
@@ -24,7 +27,7 @@
     {% endif %}
 
     <!-- Contenido principal -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto">
         <!-- Mensajes del sistema -->
         {% if messages %}
         <div class="mb-4 flex justify-center">
@@ -50,18 +53,7 @@
 
     <!-- JavaScript -->
     {% block extra_js %}
-    <script>
-    // Espera 4 segundos y luego oculta todos los mensajes
-    setTimeout(() => {
-        const messages = document.querySelectorAll('.alert');
-        messages.forEach(msg => {
-            msg.style.transition = 'opacity 0.5s';
-            msg.style.opacity = 0;
-            setTimeout(() => msg.remove(), 500); // eliminar del DOM
-        });
-    }, 4000); // 4000 ms = 4 segundos
-    </script>
-
+    <script src="{% load static %}{% static 'js/messages.js' %}"></script>
     {% endblock %}
 </body>
 </html>

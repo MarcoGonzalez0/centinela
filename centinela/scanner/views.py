@@ -4,12 +4,33 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
-from .forms import CustomUserCreationForm  # Importar nuestro formulario personalizado
+from .forms import CustomUserCreationForm, ScanForm  # Importar nuestro formulario personalizado
 
 
 
-def index_view(request):
-    return render(request, 'index.html')
+def index_view(request): #el escaneo se hace aqui
+    if request.method == 'POST': #si es post, es decir, se envió el formulario
+        form = ScanForm(request.POST) #ocupamos el formulario predefinido en forms.py
+        if form.is_valid():
+            target = form.cleaned_data['target']
+            modules = form.cleaned_data['modules']
+            try:
+                # Aquí puedes manejar el escaneo con los módulos seleccionados
+                messages.success(request, f'Scan iniciado para {target} con módulos: {", ".join(modules)}')
+
+                # con el target mandarlo a los modulos seleccionados tipo run_nmap(target) etc
+                
+                return redirect('index_view')
+
+            except Exception as e:
+                #este error se maneja en messages (se muestra arriba)
+                messages.error(request, f'Error al iniciar el scan: {e}')            
+        
+        #los errores del formulario se manejan automaticamente en form.errors
+    else:
+        form = ScanForm()  # Crear formulario vacío para GET
+
+    return render(request, 'index.html', {'form': form}) #si es get, solo renderiza la pagina
 
 def auth_view(request):
     # Si el usuario ya está autenticado, redirigir a la página principal
@@ -31,6 +52,11 @@ class LoginViewCustom(LoginView):
         messages.success(self.request, "Inicio de sesión exitoso!")
         
         return super().form_valid(form)
+    
+    #si el login no es válido
+    def form_invalid(self, form):
+        #errores se manejan en form.errors
+        return super().form_invalid(form)
 
     def get_success_url(self):
         # Redirige al home o al next param si existe
@@ -49,10 +75,7 @@ def register_view(request):
             messages.success(request, '¡Registro exitoso! Bienvenido.')
             return redirect('index_view')
         else:
-            # Itera sobre todos los errores del formulario y los agrega a messages
-            for error_list in form.errors.values():
-                for error in error_list:
-                    messages.error(request, error)
+            #Errores se manejan en form.errors
             return redirect(reverse('auth_view') + '?form=register')
 
     # Si es GET, redirigir a la página de autenticación con el formulario de registro
