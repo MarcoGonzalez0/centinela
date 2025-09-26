@@ -1,0 +1,103 @@
+{% extends 'base_visuals.html' %}
+
+{% block module_name %}DNS{% endblock %}
+{% block module_status %}{% endblock %}
+
+<!-- aca va el grafico -->
+{% block module_content %}
+<div class="space-y-6">
+  <!-- Contenedor gráfico -->
+  <div class="grafico-container">
+    <canvas id="dnsChart" width="400" height="300"></canvas>
+  </div>
+
+  <!-- Tabla de resultados -->
+  <table class="min-w-full border text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border">Tipo</th>
+        <th class="px-4 py-2 border">Valores</th>
+        <th class="px-4 py-2 border">Errores</th>
+      </tr>
+    </thead>
+    <tbody id="dnsTableBody"></tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+/**
+ * Función genérica para inicializar los gráficos del módulo.
+ * @param {Object} datos - JSON de resultados del módulo DNS.
+ */
+function initGraficos(datos) {
+  try {
+    // Validar que datos tenga la estructura esperada
+    if (!datos || !datos.records || !datos.meta) {
+      throw new Error("Formato inválido en los datos recibidos.");
+    }
+
+    // === 1. Preparar datos para gráfico ===
+    const counts = Object.keys(datos.records).map(tipo => ({
+      tipo,
+      cantidad: Array.isArray(datos.records[tipo]) ? datos.records[tipo].length : 0
+    }));
+
+    // Verificar que exista el canvas antes de usar Chart.js
+    const chartEl = document.getElementById('dnsChart');
+    if (!chartEl) {
+      throw new Error("Elemento canvas no encontrado en el DOM.");
+    }
+
+    // Crear gráfico de barras
+    new Chart(chartEl, {
+      type: 'bar',
+      data: {
+        labels: counts.map(c => c.tipo),
+        datasets: [{
+          label: 'Cantidad de registros',
+          data: counts.map(c => c.cantidad),
+          backgroundColor: '#3498db'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    // === 2. Llenar tabla ===
+    const tbody = document.getElementById('dnsTableBody');
+    if (!tbody) {
+      throw new Error("Elemento tbody no encontrado en el DOM.");
+    }
+
+    tbody.innerHTML = ''; // limpiar contenido previo
+    Object.keys(datos.records).forEach(tipo => {
+      const valores = datos.records[tipo]?.join('<br>') || '—';
+      const error = datos.meta.errors?.[tipo] || '—';
+      tbody.innerHTML += `
+        <tr>
+          <td class="border px-4 py-2">${tipo}</td>
+          <td class="border px-4 py-2">${valores}</td>
+          <td class="border px-4 py-2 text-red-600">${error}</td>
+        </tr>
+      `;
+    });
+
+  } catch (err) {
+    // Mostrar error en consola (para debugging)
+    console.error("Error al renderizar gráficos DNS:", err);
+
+    // Mostrarlo en la UI
+    const container = document.querySelector('.container-errores');
+    if (container) {
+        container.innerHTML = `<strong class="font-bold">Error:</strong>
+      <span class="block sm:inline">⚠️ Error al renderizar datos: ${err.message}</span>`;
+    }
+  }
+}
+</script>
+{% endblock %}

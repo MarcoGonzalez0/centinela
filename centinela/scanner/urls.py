@@ -1,6 +1,15 @@
+# Router y URLs para la API REST de resultados de módulos
+from rest_framework import routers
+from .api_views import ResultadoModuloViewSet
+
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+
+router = routers.DefaultRouter()
+
+# Registrar el ViewSet con el router
+router.register(r'resultadosmodulos', ResultadoModuloViewSet, basename='resultadosModulos')
 
 urlpatterns = [
     # Tus patrones de URL van aquí
@@ -11,13 +20,6 @@ urlpatterns = [
     path('login/', views.LoginViewCustom.as_view(), name='login_view'),                     #ocupa vista predefinida
     path('register/', views.register_view, name='register_view'),                           #vista que yo defino
     path('logout/', views.logout_view, name='logout_view'),                                 #ocupa vista predefinida
-
-
-
-
-
-
-
 
 
     # Las siguientes vistas son para configurar mas adelante
@@ -40,3 +42,6 @@ urlpatterns = [
     ), name='password_reset_complete'),
 
 ]
+
+# Incluir las URLs del router de la API REST
+urlpatterns += router.urls

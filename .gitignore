@@ -32,4 +32,4 @@ staticfiles/
 node_modules/
 
 # Carpeta de documentos
-Documentos/
+#Documentos/

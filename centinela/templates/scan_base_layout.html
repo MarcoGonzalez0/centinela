@@ -1,0 +1,81 @@
+<!-- Tailwind no lo importo porque esta en index.html -->
+
+
+<!-- 4 Columnas -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
+</div>
+
+<script>
+    const rutaModulos = {
+        'dns': 'modules/dns_visuals.html',
+        'dorks': 'modules/dorks_visuals.html',
+        'headerhttp': 'modules/headerhttp_visuals.html',
+        'nmap': 'modules/nmap_visuals.html',
+        'ssl': 'modules/ssl_visuals.html',
+        'whois': 'modules/whois_visuals.html',
+    };
+
+    const nombreTargetElement = '.grid'; // Selector del contenedor donde se cargarán los módulos
+
+    // aca va el polling
+    (function(){
+        const escaneoId = "{{ escaneo_id|default:'' }}";
+        if (!escaneoId) return; // nada que vigilar
+
+        const intervalMs = 3000; // poll cada 3s (ajusta si quieres)
+
+        async function fetchResults(){
+            try {
+            const resp = await fetch(`resultadomodulos/?escaneo_id=${escaneoId}`, {
+                credentials: 'same-origin', // usa session auth
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!resp.ok) {
+                console.error('API error', resp.status);
+                return;
+            }
+            const data = await resp.json(); // array de resultados
+            loadHTML(rutaModulos[data.nombre_modulo], nombreTargetElement, data);
+
+            const allFinished = data.length > 0 && data.every(r => r.estado === 'completado' || r.estado === 'error');
+            if (allFinished) {
+                clearInterval(poller);
+                // opcional: mostrar toast o abrir modal
+            }
+            } catch (err) {
+            console.error('fetch error', err);
+            }
+        }})();
+
+
+
+
+
+
+    //AUXILIARES
+    // Función para cargar HTML externo y traer los visuals de cada modulo
+    async function loadHTML(file, targetElement, data) {
+        /*
+        file = ruta del archivo html visuals a cargar
+        targetElement = selector del elemento donde se cargará el HTML
+        data = datos con los cuales se llenarán los visuals html
+        */
+        try {
+            const response = await fetch(file);
+            const html = await response.text();
+            document.querySelector(targetElement).innerHTML = html;
+
+            setTimeout(() => {
+                // llamo a la funcion interna del html que inicializa los graficos
+                initGraficos(data);
+            }, 100); // Espera 100ms para asegurarse de que el HTML esté completamente insertado
+
+        } catch (error) {
+            console.error('Error cargando el archivo:', error);
+            alert('Error cargando el archivo html. Revisa la consola para más detalles.');
+        }
+    }
+
+// Uso
+//loadHTML('modulos/card.html', '.grid');
+</script>

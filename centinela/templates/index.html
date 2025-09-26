@@ -46,20 +46,41 @@
         class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg p-3 space-y-2"
         >
         <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="nmap">
-            <span>Nmap</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Escáner de red para descubrir hosts y servicios">i</span>
-        </label>
-        <label class="flex items-center space-x-2">
             <input type="checkbox" name="modules" value="dns">
             <span>DNS</span>
             <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para consultas DNS de IPs y dominios">i</span>
         </label>
+
         <label class="flex items-center space-x-2">
             <input type="checkbox" name="modules" value="dorks">
             <span>Dorks</span>
             <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Búsquedas avanzadas en Google">i</span>
         </label>
+
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="modules" value="headerhttp">
+            <span>Headers HTTP</span>
+            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para analizar los headers HTTP de un sitio web">i</span>
+        </label>
+
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="modules" value="nmap">
+            <span>Nmap</span>
+            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Escáner de red para descubrir hosts y servicios">i</span>
+        </label>
+
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="modules" value="ssl">
+            <span>SSL</span>
+            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para analizar la seguridad SSL de un sitio web">i</span>
+        </label>
+
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="modules" value="whois">
+            <span>Whois</span>
+            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para consultar información WHOIS de dominios">i</span>
+        </label>
+        
         <!-- Agrega más módulos aquí -->
         </div>
     </div>
@@ -96,6 +117,7 @@
 </div>
 
 <!--AQUI VAN LOS RESULTADOS DE LOS MODULOS COMO GRAFICOS U OTROS (quizas en otros archivos)-->
+{% include 'scan_base_layout.html' %}
 
 
 

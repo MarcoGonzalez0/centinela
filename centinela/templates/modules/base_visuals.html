@@ -1,0 +1,26 @@
+<div class="container bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md"> <!--contenedor-->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4"><!--columnas de header de base, nombre, boton, estado-->
+        <div class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4"> <!--columna 1-->
+            {% block module_name %}Nombre del Módulo{% endblock %}
+        </div>
+
+        <div> <!--columna 2-->
+            <button class="bg-blue-500 text-white px-4 py-2 rounded">Reintentar módulo</button>
+        </div>
+
+        <div> <!--columna 1-->
+            Estado del módulo: <span class="font-semibold text-green-600">{% block module_status %}En proceso{% endblock %}</span>
+        </div>
+
+    </div>
+
+    <!-- DIV de errores -->
+    <div class="container-errores bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <!-- Aquí se mostrarán los errores desde el módulo -->
+    </div>
+
+    {% block module_content %}
+    <!-- Graficos van acá -->
+    {% endblock %}
+
+</div>

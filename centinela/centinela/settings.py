@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'scanner',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,36 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configuración de Celery
+
+# Broker URL (Redis recomendado para producción)
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# Backend para almacenar resultados (opcional)
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+# Zona horaria para Celery (debe coincidir con Django)
+CELERY_TIMEZONE = 'America/Santiago'  # Ajusta según tu zona horaria
+
+# Configuración para trabajar con Django
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Configuración adicional
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutos
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 1000
+
+# TODOS los tasks van a la cola "default" excepto nmap que va a "heavy"
+CELERY_TASK_ROUTES = {
+    'scanner.tasks.run_modulo_task': {
+        'queue': 'default',
+    },
+}
+
+
+# Para tareas programadas (opcional - requiere django-celery-beat)
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

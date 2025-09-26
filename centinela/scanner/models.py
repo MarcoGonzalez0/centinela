@@ -42,4 +42,4 @@ class resultadoModulo(models.Model):
     class Meta:
         verbose_name = 'Resultado de Módulo'
         verbose_name_plural = 'Resultados de Módulos'
-        ordering = ['escaneo', 'modulo']  # Order by escaneo and then by module name
+        ordering = ['escaneo', 'nombre_modulo']  # Order by escaneo and then by module name

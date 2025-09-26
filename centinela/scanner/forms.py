@@ -52,9 +52,13 @@ def validate_ip_or_domain(value):
 
 
 MODULE_CHOICES = [
-    ('nmap', 'Nmap'),
-    ('dns', 'DNS'),
+    ('dns','DNS'),
     ('dorks', 'Dorks'),
+    ('headers', 'Headers HTTP'),
+    ('nmap', 'Nmap'),
+    ('ssl', 'SSL'),
+    ('whois', 'Whois'),
+    
 ]
 
 class ScanForm(forms.Form):
