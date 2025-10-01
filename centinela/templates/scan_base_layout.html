@@ -6,13 +6,14 @@
 </div>
 
 <script>
+    // HAY ERRORES AQUI SOLUCIONARLOS
     const rutaModulos = {
-        'dns': 'modules/dns_visuals.html',
-        'dorks': 'modules/dorks_visuals.html',
-        'headerhttp': 'modules/headerhttp_visuals.html',
-        'nmap': 'modules/nmap_visuals.html',
-        'ssl': 'modules/ssl_visuals.html',
-        'whois': 'modules/whois_visuals.html',
+        'dns': '/modules/dns_visuals.html',
+        'dorks': '/modules/dorks_visuals.html',
+        'headerhttp': '/modules/headerhttp_visuals.html',
+        'nmap': '/modules/nmap_visuals.html',
+        'ssl': '/modules/ssl_visuals.html',
+        'whois': '/modules/whois_visuals.html',
     };
 
     const nombreTargetElement = '.grid'; // Selector del contenedor donde se cargarán los módulos
@@ -23,10 +24,11 @@
         if (!escaneoId) return; // nada que vigilar
 
         const intervalMs = 3000; // poll cada 3s (ajusta si quieres)
+        
 
         async function fetchResults(){
             try {
-            const resp = await fetch(`resultadomodulos/?escaneo_id=${escaneoId}`, {
+            const resp = await fetch(`resultadosmodulos/?escaneo_id=${escaneoId}`, {
                 credentials: 'same-origin', // usa session auth
                 headers: { 'Accept': 'application/json' }
             });
@@ -35,7 +37,47 @@
                 return;
             }
             const data = await resp.json(); // array de resultados
-            loadHTML(rutaModulos[data.nombre_modulo], nombreTargetElement, data);
+
+             if (!Array.isArray(data) || data.length === 0) {
+            console.warn("No se recibieron módulos todavía");
+            return;
+            }
+            console.log("Resultados recibidos:", data);
+            console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
+
+            // 👉 recorrer todos los módulos
+            data.forEach(mod => {
+                const ruta = rutaModulos[mod.nombre_modulo];
+                if (!ruta) {
+                    console.warn("No hay ruta definida para módulo:", mod.nombre_modulo);
+                    return;
+                }
+                // Si ya existe el bloque de ese módulo, lo actualizamos en vez de volverlo a crear
+                if (document.querySelector(`#mod-${mod.id}`)) {
+                    console.log(`Módulo ${mod.nombre_modulo} ya renderizado, se actualiza estado.`);
+                    // acá podrías actualizar gráficos en vez de re-crear
+                } else {
+                    console.log(`Cargando módulo ${mod.nombre_modulo} → ${ruta}`);
+                    loadHTML(ruta, nombreTargetElement, mod);
+                }
+            });
+
+
+            // Actualizamos el estado del módulo en el frontend
+            const moduleStatusElement = document.getElementById('module-status');
+            if (moduleStatusElement) {
+                moduleStatusElement.textContent = data.estado;
+                if (data.estado === 'completado') {
+                    moduleStatusElement.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
+                    moduleStatusElement.classList.add('text-green-600');
+                } else if (data.estado === 'en_proceso') {
+                    moduleStatusElement.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
+                    moduleStatusElement.classList.add('text-yellow-600');
+                } else if (data.estado === 'error') {
+                    moduleStatusElement.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
+                    moduleStatusElement.classList.add('text-red-600');
+                }
+            }
 
             const allFinished = data.length > 0 && data.every(r => r.estado === 'completado' || r.estado === 'error');
             if (allFinished) {
@@ -45,7 +87,12 @@
             } catch (err) {
             console.error('fetch error', err);
             }
-        }})();
+        }
+
+        fetchResults(); // llamada inicial inmediata
+        const poller = setInterval(fetchResults, intervalMs);
+    
+    })();
 
 
 
@@ -55,26 +102,29 @@
     //AUXILIARES
     // Función para cargar HTML externo y traer los visuals de cada modulo
     async function loadHTML(file, targetElement, data) {
-        /*
-        file = ruta del archivo html visuals a cargar
-        targetElement = selector del elemento donde se cargará el HTML
-        data = datos con los cuales se llenarán los visuals html
-        */
         try {
             const response = await fetch(file);
             const html = await response.text();
-            document.querySelector(targetElement).innerHTML = html;
+
+            // Crear un contenedor dinámico para este módulo
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("col-span-1"); // ocupa una columna
+            wrapper.id = `mod-${data.id}`; // id único por módulo
+            wrapper.innerHTML = html;
+
+            // Agregarlo al grid (appendChild en vez de innerHTML =)
+            document.querySelector(targetElement).appendChild(wrapper);
 
             setTimeout(() => {
-                // llamo a la funcion interna del html que inicializa los graficos
+                // Llamo a la función del módulo que inicializa los gráficos
                 initGraficos(data);
-            }, 100); // Espera 100ms para asegurarse de que el HTML esté completamente insertado
+            }, 100);
 
         } catch (error) {
             console.error('Error cargando el archivo:', error);
-            alert('Error cargando el archivo html. Revisa la consola para más detalles.');
         }
     }
+
 
 // Uso
 //loadHTML('modulos/card.html', '.grid');

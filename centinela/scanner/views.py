@@ -24,10 +24,10 @@ def index_view(request): # el escaneo se hace aqui
             if form.is_valid():
                 target = form.cleaned_data['target']
                 modules = form.cleaned_data['modules']
-                try:
-                    # Aquí puedes manejar el escaneo con los módulos seleccionados
-                    messages.success(request, f'Scan iniciado para {target} con módulos: {", ".join(modules)}')
 
+                print(modules) # DEBUG
+                try:
+                    
                     """
                     -------FLUJO--------
                     1. Crear instancia de Escaneo en estado 'pendiente'
@@ -50,6 +50,7 @@ def index_view(request): # el escaneo se hace aqui
 
                     # 2. Crear instancias de resultadoModulo
                     for modulo in modules:
+                        
                         resultado = resultadoModulo.objects.create(
                             escaneo=escaneo, # Foranea al escaneo creado
                             nombre_modulo=modulo,
@@ -61,6 +62,8 @@ def index_view(request): # el escaneo se hace aqui
                             run_modulo_task.apply_async(args=[resultado.id], queue="heavy") 
                         else: # el resto va en cola default
                             run_modulo_task.delay(resultado.id) # Llamada asíncrona con Celery
+
+                    messages.success(request, f'Scan iniciado para {target} con módulos: {", ".join(modules)}')
 
                     
                     # Cuando las tareas terminen en tasks.py, de alguna manera mostrar los resultados en el index sin recargar
@@ -136,3 +139,7 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect('auth_view')
+
+# Para renderizar los visuals de cada módulo, esto es para fragmentos que ocupen django
+def module_visual(request, name):
+    return render(request, f"modules/{name}_visuals.html")

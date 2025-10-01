@@ -5,12 +5,12 @@ from celery import shared_task
 # Modelos
 from .models import resultadoModulo, Escaneo
 #Escaneos
-from modulos.scan_dns import run_dns
-from modulos.scan_dorks import run_dorks
-from modulos.scan_headerhttp import run_headerhttp
-from modulos.scan_nmap import run_nmap
-from modulos.scan_ssl import run_ssl
-from modulos.scan_whois import run_whois
+from .modulos.scan_dns import run_dns
+from .modulos.scan_dorks import run_dorks
+from .modulos.scan_headerhttp import run_headerhttp
+from .modulos.scan_nmap import run_nmap
+from .modulos.scan_ssl import run_ssl
+from .modulos.scan_whois import run_whois
 
 
 @shared_task
@@ -47,7 +47,7 @@ def run_modulo_task(resultado_id):
 
         # Chequear si ya todos los módulos de este escaneo terminaron
         escaneo = resultado.escaneo
-        if not escaneo.resultadomodulo_set.filter(estado__in=["pendiente", "en_proceso"]).exists():
+        if not escaneo.resultados.filter(estado__in=["pendiente", "en_proceso"]).exists():
             escaneo.estado = "completado"
             escaneo.save()
 
@@ -61,7 +61,7 @@ def run_modulo_task(resultado_id):
 
                 # También actualizar el estado del escaneo principal a "en_proceso"
                 escaneo = resultado.escaneo
-                if not escaneo.resultadomodulo_set.filter(estado__in=["pendiente", "en_proceso"]).exists():
+                if not escaneo.resultados.filter(estado__in=["pendiente", "en_proceso"]).exists():
                     escaneo.estado = "completado"
                     escaneo.save()
                     

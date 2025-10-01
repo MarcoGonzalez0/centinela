@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    container_name: django_web
+    entrypoint: ["/entrypoint.sh"]
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  tailwind:
+    build:
+      context: .
+      dockerfile: Dockerfile.tailwind
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+
+  # Worker normal (cola default)
+  celery_worker_default:
+    build: .
+    container_name: celery_worker_default
+    entrypoint: ["/entrypoint.sh"]
+    command: celery -A centinela worker -l info -Q default
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  # Worker pesado (cola heavy, ej. nmap)
+  celery_worker_heavy:
+    build: .
+    container_name: celery_worker_heavy
+    entrypoint: ["/entrypoint.sh"]
+    command: celery -A centinela worker -l info -Q heavy
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+
+  redis:
+    image: redis:7
+    container_name: redis_broker
+    ports:
+      - "6379:6379"
+
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

@@ -1,0 +1,16 @@
+# Usa Node oficial
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copia package.json y package-lock.json para instalar dependencias
+COPY package.json package-lock.json ./
+
+# Instala dependencias, incluyendo opcionales
+RUN npm install
+
+# Copia todo el proyecto (si necesitas los archivos de CSS)
+COPY . .
+
+# Comando para compilar Tailwind y mantener watch
+CMD ["npx", "tailwindcss", "-i", "src/input.css", "-o", "dist/output.css", "--watch"]

@@ -20,6 +20,7 @@ urlpatterns = [
     path('login/', views.LoginViewCustom.as_view(), name='login_view'),                     #ocupa vista predefinida
     path('register/', views.register_view, name='register_view'),                           #vista que yo defino
     path('logout/', views.logout_view, name='logout_view'),                                 #ocupa vista predefinida
+    path("modules/<str:name>/", views.module_visual, name="module_visual"),  # Vista para renderizar los visuals de cada módulo, esta api sirve los fragmentos html
 
 
     # Las siguientes vistas son para configurar mas adelante

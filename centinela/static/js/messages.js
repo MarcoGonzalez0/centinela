@@ -6,4 +6,4 @@ setTimeout(() => {
         msg.style.opacity = 0;
         setTimeout(() => msg.remove(), 500); // eliminar del DOM
     });
-}, 4000); // 4000 ms = 4 segundos
+}, 7000); // 7000 ms = 7 segundos

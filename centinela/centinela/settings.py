@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -87,10 +88,10 @@ WSGI_APPLICATION = 'centinela.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'centinela_db',
-        'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',
+        'NAME': os.getenv('MYSQL_DATABASE', 'centinela_db'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', '12345'),
+        'HOST': 'mysql_db',  # Nombre del servicio en docker-compose
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -146,10 +147,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuración de Celery
 
 # Broker URL (Redis recomendado para producción)
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis_broker:6379/0'
 
 # Backend para almacenar resultados (opcional)
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis_broker:6379/0'
 
 # Zona horaria para Celery (debe coincidir con Django)
 CELERY_TIMEZONE = 'America/Santiago'  # Ajusta según tu zona horaria
