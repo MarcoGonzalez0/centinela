@@ -142,4 +142,4 @@ def logout_view(request):
 
 # Para renderizar los visuals de cada módulo, esto es para fragmentos que ocupen django
 def module_visual(request, name):
-    return render(request, f"modules/{name}_visuals.html")
+    return render(request, f"modules/{name}")

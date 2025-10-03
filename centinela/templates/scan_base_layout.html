@@ -1,19 +1,32 @@
 <!-- Tailwind no lo importo porque esta en index.html -->
+{% load static %}
+<head>
+    <script>
+        window.Visuals = {}; // espacio de nombres global para gráficos
+    </script>
 
+    <!-- cargamos los scripts de gráficos -->
+    <script src="{% static 'js/charts/dns.js' %}"></script>
+    <!-- <script src="{% static 'js/charts/dorks.js' %}"></script>
+    <script src="{% static 'js/charts/headerhttp.js' %}"></script>
+    <script src="{% static 'js/charts/nmap.js' %}"></script>
+    <script src="{% static 'js/charts/ssl.js' %}"></script>
+    <script src="{% static 'js/charts/whois.js' %}"></script> -->
+</head>
 
 <!-- 4 Columnas -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
 </div>
 
 <script>
-    // HAY ERRORES AQUI SOLUCIONARLOS
+
     const rutaModulos = {
-        'dns': '/modules/dns_visuals.html',
-        'dorks': '/modules/dorks_visuals.html',
-        'headerhttp': '/modules/headerhttp_visuals.html',
-        'nmap': '/modules/nmap_visuals.html',
-        'ssl': '/modules/ssl_visuals.html',
-        'whois': '/modules/whois_visuals.html',
+        'dns': 'dns_visuals.html',
+        'dorks': 'dorks_visuals.html',
+        'headerhttp': 'headerhttp_visuals.html',
+        'nmap': 'nmap_visuals.html',
+        'ssl': 'ssl_visuals.html',
+        'whois': 'whois_visuals.html',
     };
 
     const nombreTargetElement = '.grid'; // Selector del contenedor donde se cargarán los módulos
@@ -96,19 +109,16 @@
 
 
 
-
-
-
     //AUXILIARES
     // Función para cargar HTML externo y traer los visuals de cada modulo
     async function loadHTML(file, targetElement, data) {
         try {
-            const response = await fetch(file);
+            const response = await fetch(`modules/${file}`);
             const html = await response.text();
 
             // Crear un contenedor dinámico para este módulo
             const wrapper = document.createElement("div");
-            wrapper.classList.add("col-span-1"); // ocupa una columna
+            //wrapper.classList.add("col-span-1"); // ocupa una columna
             wrapper.id = `mod-${data.id}`; // id único por módulo
             wrapper.innerHTML = html;
 
@@ -117,15 +127,18 @@
 
             setTimeout(() => {
                 // Llamo a la función del módulo que inicializa los gráficos
-                initGraficos(data);
+                const modulo = data.nombre_modulo; // ej "dns"
+                if (window.Visuals && typeof window.Visuals[modulo] === 'function') { //Si puede acceder a windows.visuals y existe la función
+                    console.log(`Iniciando gráficos para módulo ${modulo}`, data.resultados);
+                    window.Visuals[modulo](data.resultados); // paso los datos JSON
+                } else {
+                    console.warn(`No se encontró función de inicialización para módulo ${modulo}`);
+                }
+                
             }, 100);
 
         } catch (error) {
             console.error('Error cargando el archivo:', error);
         }
     }
-
-
-// Uso
-//loadHTML('modulos/card.html', '.grid');
 </script>

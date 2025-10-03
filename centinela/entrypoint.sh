@@ -10,6 +10,7 @@ echo "Esperando a Redis..."
 /wait-for-it.sh redis:6379 --timeout=30 --strict -- echo "Redis listo"
 
 # Aplicar migraciones de Django
+# Antes de esto aplica makemigrations para que aqui solo lea el archivo generado
 echo "Aplicando migraciones de Django..."
 python manage.py migrate --noinput
 
