@@ -1,21 +1,25 @@
-<header class="bg-gray-800 text-white shadow-lg">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center py-4">
-            <div class="flex items-center space-x-4">
+<header class="bg-dark text-white shadow-lg">
+    <div class="container py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            
+            <!-- Título o logo -->
+            <div class="d-flex align-items-center gap-3">
                 {% block header_title %}
                 {% endblock %}
             </div>
-            
-            <nav class="hidden md:flex space-x-6">
-                <!-- Estos hacen referencia al name en urls.py -->
+
+            <!-- Navegación principal (oculta en mobile) -->
+            <nav class="d-none d-md-flex gap-3">
                 {% block header_links %}
                 {% endblock %}
             </nav>
 
-            <div class="flex items-center space-x-4">
+            <!-- Acciones de usuario -->
+            <div class="d-flex align-items-center gap-3">
                 {% block user_actions %}
                 {% endblock %}
             </div>
+
         </div>
     </div>
 </header>

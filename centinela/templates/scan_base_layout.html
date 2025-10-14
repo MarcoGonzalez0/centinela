@@ -1,22 +1,44 @@
 <!-- Tailwind no lo importo porque esta en index.html -->
 {% load static %}
-<head>
-    <script>
-        window.Visuals = {}; // espacio de nombres global para gráficos
-    </script>
+{% block extra_head %}
+<script>
+    window.Visuals = {}; // espacio de nombres global para gráficos
+</script>
 
-    <!-- cargamos los scripts de gráficos -->
-    <script src="{% static 'js/charts/dns.js' %}"></script>
-    <!-- <script src="{% static 'js/charts/dorks.js' %}"></script>
-    <script src="{% static 'js/charts/headerhttp.js' %}"></script>
-    <script src="{% static 'js/charts/nmap.js' %}"></script>
-    <script src="{% static 'js/charts/ssl.js' %}"></script>
-    <script src="{% static 'js/charts/whois.js' %}"></script> -->
-</head>
+<!-- Chart.js desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- cargamos los scripts de gráficos -->
+<script src="{% static 'js/charts/dns.js' %}"></script>
+<!-- <script src="{% static 'js/charts/dorks.js' %}"></script>
+<script src="{% static 'js/charts/headerhttp.js' %}"></script>
+<script src="{% static 'js/charts/nmap.js' %}"></script>
+<script src="{% static 'js/charts/ssl.js' %}"></script>
+<script src="{% static 'js/charts/whois.js' %}"></script> -->
+
+{% endblock %}
 
 <!-- 4 Columnas -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
+<div class="row g-3 justify-content-center" id="grid-modulos">
+
+    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
+        <h2 class="h4 m-0">MODULO DNS</h2>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
+        <h2 class="h4 m-0">MODULO NMAP</h2>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
+        <h2 class="h4 m-0">MODULO SSL</h2>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
+        <h2 class="h4 m-0">MODULO WHOIS</h2>
+    </div>
+
 </div>
+
 
 <script>
 
@@ -29,7 +51,7 @@
         'whois': 'whois_visuals.html',
     };
 
-    const nombreTargetElement = '.grid'; // Selector del contenedor donde se cargarán los módulos
+    const nombreTargetElement = '#grid-modulos'; // Selector del contenedor donde se cargarán los módulos
 
     // aca va el polling
     (function(){
@@ -55,8 +77,8 @@
             console.warn("No se recibieron módulos todavía");
             return;
             }
-            console.log("Resultados recibidos:", data);
-            console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
+            // console.log("Resultados recibidos:", data);
+            // console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
 
             // 👉 recorrer todos los módulos
             data.forEach(mod => {
@@ -65,13 +87,15 @@
                     console.warn("No hay ruta definida para módulo:", mod.nombre_modulo);
                     return;
                 }
+                console.log("Modulo: ", mod)
                 // Si ya existe el bloque de ese módulo, lo actualizamos en vez de volverlo a crear
                 if (document.querySelector(`#mod-${mod.id}`)) {
                     console.log(`Módulo ${mod.nombre_modulo} ya renderizado, se actualiza estado.`);
-                    // acá podrías actualizar gráficos en vez de re-crear
-                } else {
-                    console.log(`Cargando módulo ${mod.nombre_modulo} → ${ruta}`);
+                } else if (mod.estado === "completado" && mod.resultado && Object.keys(mod.resultado).length > 0) {
+                    console.log(`✅ Cargando módulo ${mod.nombre_modulo} → ${ruta}`);
                     loadHTML(ruta, nombreTargetElement, mod);
+                } else {
+                    console.log(`⏳ Módulo ${mod.nombre_modulo} aún en proceso, esperando resultados...`);
                 }
             });
 
@@ -129,8 +153,8 @@
                 // Llamo a la función del módulo que inicializa los gráficos
                 const modulo = data.nombre_modulo; // ej "dns"
                 if (window.Visuals && typeof window.Visuals[modulo] === 'function') { //Si puede acceder a windows.visuals y existe la función
-                    console.log(`Iniciando gráficos para módulo ${modulo}`, data.resultados);
-                    window.Visuals[modulo](data.resultados); // paso los datos JSON
+                    console.log(`Iniciando gráficos para módulo ${modulo}`, data.resultado);
+                    window.Visuals[modulo](data.resultado); // paso los datos JSON
                 } else {
                     console.warn(`No se encontró función de inicialización para módulo ${modulo}`);
                 }

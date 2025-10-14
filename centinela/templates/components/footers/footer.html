@@ -1,7 +1,13 @@
-<footer class="bg-gray-800 text-white shadow-inner">
-    <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-6 text-lg">
-        <div class="">&copy; {% now "Y" %} Centinela</div>
-        <a href="{% url 'index_view' %}" class="hover:text-blue-400">Acerca de</a>
-        <a href="{% url 'index_view' %}" class="hover:text-blue-400">Contacto</a>
+<footer class="bg-dark text-white shadow-sm py-3">
+    <div class="container d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 text-lg">
+        <div>&copy; {% now "Y" %} Centinela</div>
+        <a href="{% url 'index_view' %}" class="text-decoration-none text-white" 
+           onmouseover="this.style.color='#0d6efd'" onmouseout="this.style.color='white'">
+            Acerca de
+        </a>
+        <a href="{% url 'index_view' %}" class="text-decoration-none text-white" 
+           onmouseover="this.style.color='#0d6efd'" onmouseout="this.style.color='white'">
+            Contacto
+        </a>
     </div>
 </footer>

@@ -12,23 +12,23 @@ WORKDIR /app
 COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
-# Instala dependencias del sistema (ej. para nmap si lo usas dentro de contenedor)
+# Instala dependencias del sistema (ej. para nmap, MySQL, etc.)
 RUN apt-get update && apt-get install -y \
     gcc \
     libmariadb-dev-compat \
     libmariadb-dev \
     nmap \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copia requirements primero (mejor caché)
+# Copia requirements primero (para caché)
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo el proyecto
+# Copiar todo el proyecto
 COPY . .
 
-# Copia el script de entrada para las migraciones y dale permisos
+# Copiar el script de entrada
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
@@ -36,5 +36,5 @@ ENTRYPOINT ["/entrypoint.sh"]
 # Expone puerto de Django
 EXPOSE 8000
 
-# Por defecto, solo arranca Django (los workers Celery se configuran en docker-compose)
+# Comando por defecto: Django
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

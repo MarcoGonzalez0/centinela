@@ -5,104 +5,108 @@
 
 {% block content %}
 
-<div class="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-2"> <!-- evito scroll fantasma--> 
+<div class="container-fluid">
+  <div class="row">
     
     <!-- Columna izquierda (puedes dejarla vacía o poner una imagen/texto) -->
-    <div class="">
-        <!-- aquí podría ir un logo, imagen o nada -->
+    <div class="col d-none d-md-block">
+      <!-- Aquí podría ir un logo o imagen -->
     </div>
 
     <!-- Columna derecha con el formulario -->
-    <div class="flex justify-center items-start pr-70 pt-20">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            
-            <!-- Selector de formulario -->
-            <div class="flex mb-6 border-b">
-                <button id="login-tab" class="flex-1 py-2 px-4 font-medium text-blue-600 border-b-2 border-blue-600 transition-colors duration-300">Iniciar Sesión</button>
-                <button id="register-tab" class="flex-1 py-2 px-4 font-medium text-gray-500 transition-colors duration-300">Registrarse</button>
+    <div class="col-md-6 d-flex justify-content-center align-items-start pt-5">
+      <div class="bg-white p-4 p-md-5 rounded shadow w-100" style="max-width: 28rem;">
+
+        <!-- Selector de formulario -->
+        <ul class="nav nav-tabs mb-4" role="tablist">
+          <li class="nav-item flex-fill" role="presentation">
+            <button class="nav-link active text-primary fw-medium" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-form" type="button" role="tab">Iniciar Sesión</button>
+          </li>
+          <li class="nav-item flex-fill" role="presentation">
+            <button class="nav-link text-secondary fw-medium" id="register-tab" data-bs-toggle="tab" data-bs-target="#register-form" type="button" role="tab">Registrarse</button>
+          </li>
+        </ul>
+
+        <!-- Formularios -->
+        <div class="tab-content">
+
+          <!-- Login -->
+          <form id="login-form" method="POST" action="{% url 'login_view' %}" class="tab-pane fade show active">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+            <div class="mb-3">
+              <label for="id_username" class="form-label">Usuario</label>
+              <input type="text" id="id_username" name="username" required class="form-control">
             </div>
 
-            <!-- Formulario de Login -->
-            <form id="login-form" method="POST" action="{% url 'login_view' %}" class="space-y-4">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.GET.next }}">
-                
-                <div>
-                    <label for="id_username" class="block text-sm font-medium text-gray-700">Usuario</label>
-                    <input type="text" id="id_username" name="username" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="id_password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                    <input type="password" id="id_password" name="password" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">Recordarme</label>
-                    </div>
-                    <div class="text-sm">
-                        <a href="{% url 'password_reset' %}" class="font-medium text-blue-600 hover:text-blue-500">¿Olvidaste tu contraseña?</a>
-                    </div>
-                </div>
-                <button type="submit" 
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Iniciar Sesión
-                </button>
-            </form>
+            <div class="mb-3">
+              <label for="id_password" class="form-label">Contraseña</label>
+              <input type="password" id="id_password" name="password" required class="form-control">
+            </div>
 
-            <!-- Formulario de Registro -->
-            <form id="register-form" method="POST" action="{% url 'register_view' %}" class="space-y-4 hidden">
-                {% csrf_token %}
-                <div>
-                    <label for="register-username" class="block text-sm font-medium text-gray-700">Usuario</label>
-                    <input type="text" id="register-username" name="username" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="register-email" name="email" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="register-password1" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                    <input type="password" id="register-password1" name="password1" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="register-password2" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
-                    <input type="password" id="register-password2" name="password2" required 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <button type="submit" 
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    Registrarse
-                </button>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remember-me" name="remember-me">
+                <label class="form-check-label" for="remember-me">Recordarme</label>
+              </div>
+              <div>
+                <a href="{% url 'password_reset' %}" class="link-primary">¿Olvidaste tu contraseña?</a>
+              </div>
+            </div>
 
-            </form>
-            <!--Errores de formulario-->
-                {% if form.errors %}
-                    <div class="mb-2 mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                        <ul class="list-disc list-inside">
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                            {% for error in form.non_field_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+            <button type="submit" class="btn btn-primary w-100 mb-2">Iniciar Sesión</button>
+          </form>
+
+          <!-- Registro -->
+          <form id="register-form" method="POST" action="{% url 'register_view' %}" class="tab-pane fade">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="register-username" class="form-label">Usuario</label>
+              <input type="text" id="register-username" name="username" required class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="register-email" class="form-label">Email</label>
+              <input type="email" id="register-email" name="email" required class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="register-password1" class="form-label">Contraseña</label>
+              <input type="password" id="register-password1" name="password1" required class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="register-password2" class="form-label">Confirmar Contraseña</label>
+              <input type="password" id="register-password2" name="password2" required class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Registrarse</button>
+          </form>
+
         </div>
+
+        <!--Errores de formulario-->
+        {% if form.errors %}
+        <div class="alert alert-danger mt-3">
+          <ul class="mb-0">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+      </div>
     </div>
+
+  </div>
 </div>
 
 {% endblock %}
-
-
 
 {% block extra_js %}
 {{ block.super }}

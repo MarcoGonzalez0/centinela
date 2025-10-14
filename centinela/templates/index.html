@@ -1,106 +1,101 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block content %}
 
 <!-- Menu de busqueda y muestra de resultados a través de gráficos -->
-<div class="flex flex-col items-center">
+<div class="d-flex flex-column align-items-center">
 
-<!-- Logo -->
-<div class="flex items-center justify-center rounded-xl shadow bg-transparent">
-  <img src="{% static 'img/nombre_logo.png' %}" alt="Logo" class="w-200 h-60">
-</div>
+  <!-- Logo -->
+  <div class="d-flex justify-content-center rounded shadow bg-transparent mb-4">
+    <img src="{% static 'img/nombre_logo.png' %}" alt="Logo" class="img-fluid" style="max-width: 400px; max-height: auto;">
+  </div>
 
-
-<!-- Formulario -->
- <!--implementar validaciones con django-->
- 
-<form method="post" class="w-full max-w-xl p-6 rounded-2xl shadow space-y-6">
+  <!-- Formulario -->
+  <form method="post" class="w-100" style="max-width: 600px; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);">
     {% csrf_token %}
-    <!-- Inputs en una fila -->
-    <div class="flex space-x-4">
     
-    <!-- Input dominio/IP -->
-    <input 
-        type="text" 
-        name="target" 
-        placeholder="Dominio o IP" 
-        class="flex-1 px-4 py-2 border rounded-xl shadow-sm bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        required
-    >
+    <!-- Inputs en una fila -->
+    <div class="d-flex mb-3">
+      <!-- Input dominio/IP -->
+      <input 
+          type="text" 
+          name="target" 
+          placeholder="Dominio o IP" 
+          class="form-control me-2"
+          required
+      >
 
-    <!-- Dropdown módulos -->
-    <div class="relative">
+      <!-- Dropdown módulos -->
+      <div class="dropdown">
         <button 
-        type="button" 
-        id="dropdownButton"
-        class="px-4 py-2 border rounded-xl shadow-sm bg-gray-100 hover:bg-gray-200 focus:outline-none"
+          type="button" 
+          id="dropdownButton"
+          class="btn btn-light dropdown-toggle"
+          data-bs-toggle="dropdown" aria-expanded="false"
         >
-        Seleccionar módulos ▼
+          Seleccionar módulos
         </button>
 
         <!-- Menú desplegable -->
         <div 
-        id="dropdownMenu" 
-        class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg p-3 space-y-2"
+          id="dropdownMenu" 
+          class="dropdown-menu p-3 shadow" 
+          style="min-width: 220px;"
         >
-        <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="dns">
+          <label class="form-check mb-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" name="modules" value="dns">
             <span>DNS</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para consultas DNS de IPs y dominios">i</span>
-        </label>
+            <span class="badge bg-info text-dark ms-2" style="cursor: help;" title="Herramienta para consultas DNS de IPs y dominios">i</span>
+          </label>
 
-        <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="dorks">
+          <label class="form-check mb-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" name="modules" value="dorks">
             <span>Dorks</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Búsquedas avanzadas en Google">i</span>
-        </label>
+            <span class="badge bg-info text-dark ms-2" style="cursor: help;" title="Búsquedas avanzadas en Google">i</span>
+          </label>
 
-        <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="headerhttp">
+          <label class="form-check mb-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" name="modules" value="headerhttp">
             <span>Headers HTTP</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para analizar los headers HTTP de un sitio web">i</span>
-        </label>
+            <span class="badge bg-info text-dark ms-2" style="cursor: help;" title="Herramienta para analizar los headers HTTP de un sitio web">i</span>
+          </label>
 
-        <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="nmap">
+          <label class="form-check mb-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" name="modules" value="nmap">
             <span>Nmap</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Escáner de red para descubrir hosts y servicios">i</span>
-        </label>
+            <span class="badge bg-info text-dark ms-2" style="cursor: help;" title="Escáner de red para descubrir hosts y servicios">i</span>
+          </label>
 
-        <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="ssl">
+          <label class="form-check mb-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" name="modules" value="ssl">
             <span>SSL</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para analizar la seguridad SSL de un sitio web">i</span>
-        </label>
+            <span class="badge bg-info text-dark ms-2" style="cursor: help;" title="Herramienta para analizar la seguridad SSL de un sitio web">i</span>
+          </label>
 
-        <label class="flex items-center space-x-2">
-            <input type="checkbox" name="modules" value="whois">
+          <label class="form-check mb-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" name="modules" value="whois">
             <span>Whois</span>
-            <span class="cursor-help text-blue-500 text-sm font-bold border border-blue-500 rounded-full w-4 h-4 flex items-center justify-center text-xs" title="Herramienta para consultar información WHOIS de dominios">i</span>
-        </label>
-        
-        <!-- Agrega más módulos aquí -->
+            <span class="badge bg-info text-dark ms-2" style="cursor: help;" title="Herramienta para consultar información WHOIS de dominios">i</span>
+          </label>
         </div>
-    </div>
-
+      </div>
     </div>
 
     <!-- Botón Escanear -->
     <div class="text-center">
-    <button 
-        type="submit" 
-        class="px-6 py-2 bg-blue-600 text-white text-xl rounded-xl shadow hover:bg-blue-700 transition"
-    >
-        Escanear 🚀
-    </button>
+      <button 
+          type="submit" 
+          class="btn btn-primary btn-lg"
+      >
+          Escanear 🚀
+      </button>
     </div>
 
     <!--Errores de formulario-->
     {% if form.errors %}
-        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <ul class="list-disc list-inside">
+        <div class="alert alert-danger mt-3">
+            <ul class="mb-0">
                 {% for field in form %}
                     {% for error in field.errors %}
                         <li>{{ error }}</li>
@@ -112,7 +107,7 @@
             </ul>
         </div>
     {% endif %}
-</form>
+  </form>
 
 </div>
 
@@ -120,11 +115,16 @@
 {% include 'scan_base_layout.html' %}
 
 
-
-     
 {% endblock %}
 
 {% block extra_js %}
-{{ block.super }} <!-- este es para importar los scripts del padre -->
+{{ block.super }}
 <script src="{% static 'js/modulosDesplegables.js' %}"></script>
+<script>
+  // Inicializar tooltips de Bootstrap
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+</script>
 {% endblock %}
