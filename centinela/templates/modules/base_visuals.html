@@ -1,28 +1,41 @@
 {% load static %}
 
-<div class="bg-light rounded shadow p-3 w-100" style="height: 400px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-size: 0.875rem;">
+<div class="bg-light rounded shadow p-3 w-100" style="height: auto; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-size: 0.875rem;">
     
     <!-- Header grid -->
-    <div class="row g-3 align-items-center">
-        
-        <!-- Nombre del módulo -->
-        <div class="col text-truncate fw-semibold" style="font-size: 1.125rem; color: #212529;">
-            {% block module_name %}Nombre del Módulo{% endblock %}
+    <div class="container">
+        <!-- Fila 1: nombre del módulo y botón reintentar -->
+        <div class="row g-3 align-items-center">
+            <!-- Nombre del módulo -->
+            <div class="col text-truncate fw-semibold" style="font-size: 1.125rem; color: #212529;">
+                {% block module_name %}Nombre del Módulo{% endblock %}
+            </div>
+
+            <!-- Botón Reintentar -->
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-primary btn-sm">
+                    Reintentar módulo
+                </button>
+            </div>
         </div>
 
-        <!-- Botón Reintentar -->
-        <div class="col d-flex justify-content-end">
-            <button class="btn btn-primary btn-sm">
-                Reintentar módulo
-            </button>
-        </div>
+        <!-- Fila 2: estado e IA -->
+        <div class="row g-3 align-items-center mt-1">
+            <!-- Estado del módulo -->
+            <div class="col" style="color: #495057; font-size: 0.875rem;">
+                Estado del módulo: 
+                <span id="module-status" class="fw-semibold text-success">Activo</span>
+            </div>
 
-        <!-- Estado del módulo -->
-        <div class="col-12" style="color: #495057; font-size: 0.875rem; margin-top: 0.25rem;">
-            Estado del módulo: 
-            <span id="module-status" class="fw-semibold text-success">Activo</span>
+            <!-- Integración con IA -->
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-outline-secondary btn-sm">
+                    🤖 Explicación con IA
+                </button>
+            </div>
         </div>
     </div>
+
 
     <!-- DIV de errores -->
     <div class="container-errores alert alert-danger mt-3 p-2 rounded d-none" style="max-height: 200px; overflow:auto; font-size: 0.875rem;">
@@ -31,9 +44,6 @@
 
     <!-- Contenido dinámico -->
     {% block module_content %}
-    <div class="flex-grow-1 overflow-auto mt-2">
-        <!-- Gráficos o tablas aquí -->
-    </div>
     {% endblock %}
 
 </div>

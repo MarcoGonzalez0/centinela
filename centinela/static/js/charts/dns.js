@@ -38,7 +38,8 @@
             options: {
                 responsive: true,
                 plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                title:{display:true, text:'Cantidad de registros DNS por tipo'}
                 }
             }
             });
@@ -57,7 +58,7 @@
                 <tr>
                 <td class="border">${tipo}</td>
                 <td class="border">${valores}</td>
-                <td class="border text-red-600">${error}</td>
+                <td class="border">${error}</td>
                 </tr>
             `;
             });

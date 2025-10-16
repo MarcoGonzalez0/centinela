@@ -18,25 +18,8 @@
 
 {% endblock %}
 
-<!-- 4 Columnas -->
+<!-- 3 Columnas -->
 <div class="row g-3 justify-content-center" id="grid-modulos">
-
-    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
-        <h2 class="h4 m-0">MODULO DNS</h2>
-    </div>
-
-    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
-        <h2 class="h4 m-0">MODULO NMAP</h2>
-    </div>
-
-    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
-        <h2 class="h4 m-0">MODULO SSL</h2>
-    </div>
-
-    <div class="col-12 col-sm-6 col-lg-3 border border-danger d-flex justify-content-center align-items-center" style="height: 15rem;">
-        <h2 class="h4 m-0">MODULO WHOIS</h2>
-    </div>
-
 </div>
 
 
@@ -142,7 +125,7 @@
 
             // Crear un contenedor dinámico para este módulo
             const wrapper = document.createElement("div");
-            //wrapper.classList.add("col-span-1"); // ocupa una columna
+            wrapper.classList.add('col-12', 'col-md-4'); // 3 columnas en md y superiores, 1 columna en small
             wrapper.id = `mod-${data.id}`; // id único por módulo
             wrapper.innerHTML = html;
 
