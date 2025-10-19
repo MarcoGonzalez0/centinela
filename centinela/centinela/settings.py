@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': os.getenv('MYSQL_DATABASE', 'centinela_db'),
         'USER': os.getenv('MYSQL_USER'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', '12345'),
-        'HOST': 'mysql_db',  # Nombre del servicio en docker-compose
+        'HOST': 'db',  # Nombre del servicio en docker-compose
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -145,10 +145,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración de Celery
-
 # Broker URL (Redis recomendado para producción)
 CELERY_BROKER_URL = 'redis://redis_broker:6379/0'
-
 # Backend para almacenar resultados (opcional)
 CELERY_RESULT_BACKEND = 'redis://redis_broker:6379/0'
 
@@ -160,6 +158,11 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+# IMPORTANTE: Configurar cola por defecto
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_EXCHANGE = 'default'
+CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
+
 # Configuración adicional
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutos
@@ -170,6 +173,7 @@ CELERY_WORKER_MAX_TASKS_PER_CHILD = 1000
 CELERY_TASK_ROUTES = {
     'scanner.tasks.run_modulo_task': {
         'queue': 'default',
+
     },
 }
 

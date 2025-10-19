@@ -1,18 +1,11 @@
-# Usa Python oficial
 FROM python:3.11-slim
 
-# Configuración básica
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Directorio de trabajo
 WORKDIR /app
 
-# Copiar wait-for-it
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-# Instala dependencias del sistema (ej. para nmap, MySQL, etc.)
+# Dependencias del sistema
 RUN apt-get update && apt-get install -y \
     gcc \
     libmariadb-dev-compat \
@@ -21,20 +14,21 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copia requirements primero (para caché)
+# Instalar dependencias Python (esto se cachea si requirements.txt no cambia)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar todo el proyecto
-COPY . .
-
-# Copiar el script de entrada
+# Copiar solo scripts necesarios
+COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
 
-# Expone puerto de Django
+RUN sed -i 's/\r$//' /wait-for-it.sh /entrypoint.sh \
+    && chmod +x /wait-for-it.sh /entrypoint.sh
+
+# ❌ NO COPIAR TODO EL CÓDIGO AQUÍ
+# COPY . .  <- ELIMINAR ESTA LÍNEA
+
 EXPOSE 8000
 
-# Comando por defecto: Django
+ENTRYPOINT ["sh", "/entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

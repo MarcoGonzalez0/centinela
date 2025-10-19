@@ -3,6 +3,8 @@ version: "3.9"
 services:
   web:
     build: .
+    environment:
+      - ROLE=web
     container_name: django_web
     entrypoint: ["/entrypoint.sh"]
     command: python manage.py runserver 0.0.0.0:8000
@@ -19,6 +21,8 @@ services:
   # Worker normal (cola default)
   celery_worker_default:
     build: .
+    environment:
+      - ROLE=worker
     container_name: celery_worker_default
     entrypoint: ["/entrypoint.sh"]
     command: celery -A centinela worker -l info -Q default
@@ -33,6 +37,8 @@ services:
   # Worker pesado (cola heavy, ej. nmap)
   celery_worker_heavy:
     build: .
+    environment:
+      - ROLE=worker
     container_name: celery_worker_heavy
     entrypoint: ["/entrypoint.sh"]
     command: celery -A centinela worker -l info -Q heavy
