@@ -10,14 +10,54 @@
 
 <!-- cargamos los scripts de gráficos -->
 <script src="{% static 'js/charts/dns.js' %}"></script>
-<!-- <script src="{% static 'js/charts/dorks.js' %}"></script>
-<script src="{% static 'js/charts/headerhttp.js' %}"></script>
+<script src="{% static 'js/charts/dorks.js' %}"></script>
+<!-- <script src="{% static 'js/charts/headerhttp.js' %}"></script>
 <script src="{% static 'js/charts/nmap.js' %}"></script>
 <script src="{% static 'js/charts/ssl.js' %}"></script>
 <script src="{% static 'js/charts/whois.js' %}"></script> -->
 
 {% endblock %}
 
+
+
+{% if escaneo %}
+<!-- Header con URL objetivo del escaneo y un boton de descargar informe -->
+<div id="header-escaneo" class="container-fluid bg-dark border-bottom border-secondary py-3 px-4 d-flex justify-content-between align-items-center">
+
+  <!-- Información del escaneo -->
+  <div class="d-flex align-items-center gap-4 text-light small">
+    <div class="d-flex flex-column">
+      <span class="fw-semibold text-white">Escaneo #{{ escaneo.id }}</span>
+      <span class="text-secondary">Objetivo: {{ escaneo.objetivo }}</span>
+    </div>
+    <div class="d-none d-sm-flex flex-column text-end">
+      <span class="text-uppercase text-muted small">Estado</span>
+      <span class="fw-semibold 
+        {% if escaneo.estado == 'completado' %}text-success
+        {% elif escaneo.estado == 'en_proceso' %}text-warning
+        {% else %}text-danger{% endif %}" id="escaneo-estado">
+        {{ escaneo.estado|capfirst }}
+      </span>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if escaneo.estado == 'completado' %}
+  <!-- Botón de acción -->
+  <div>
+    <a href="{% url 'scan_report_view' escaneo.id %}" class="btn btn-primary d-flex align-items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+        <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+        <path d="M7.646 10.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 1 0-.708-.708L8.5 9.293V1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3z"/>
+      </svg>
+      Descargar informe
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Contenedor principal -->
 <!-- 3 Columnas -->
 <div class="row g-3 justify-content-center" id="grid-modulos">
 </div>
@@ -34,76 +74,67 @@
         'whois': 'whois_visuals.html',
     };
 
+    const escaneoId = "{{ escaneo.id|default:'' }}";
     const nombreTargetElement = '#grid-modulos'; // Selector del contenedor donde se cargarán los módulos
+    const estadoSpan = document.getElementById('escaneo-estado'); // Span donde se muestra el estado del escaneo
 
     // aca va el polling
     (function(){
-        const escaneoId = "{{ escaneo_id|default:'' }}";
+        
         if (!escaneoId) return; // nada que vigilar
 
-        const intervalMs = 3000; // poll cada 3s (ajusta si quieres)
-        
+        const intervalMs = 2000; // poll cada 2s (ajusta si quieres)       
 
         async function fetchResults(){
             try {
-            const resp = await fetch(`resultadosmodulos/?escaneo_id=${escaneoId}`, {
-                credentials: 'same-origin', // usa session auth
-                headers: { 'Accept': 'application/json' }
-            });
-            if (!resp.ok) {
-                console.error('API error', resp.status);
-                return;
-            }
-            const data = await resp.json(); // array de resultados
-
-             if (!Array.isArray(data) || data.length === 0) {
-            console.warn("No se recibieron módulos todavía");
-            return;
-            }
-            // console.log("Resultados recibidos:", data);
-            // console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
-
-            // 👉 recorrer todos los módulos
-            data.forEach(mod => {
-                const ruta = rutaModulos[mod.nombre_modulo];
-                if (!ruta) {
-                    console.warn("No hay ruta definida para módulo:", mod.nombre_modulo);
+                // trae todos los modulos de este escaneo
+                const resp = await fetch(`resultadosmodulos/?escaneo_id=${escaneoId}`, {
+                    credentials: 'same-origin', // usa session auth
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!resp.ok) {
+                    console.error('API error', resp.status);
                     return;
                 }
-                console.log("Modulo: ", mod)
-                // Si ya existe el bloque de ese módulo, lo actualizamos en vez de volverlo a crear
-                if (document.querySelector(`#mod-${mod.id}`)) {
-                    console.log(`Módulo ${mod.nombre_modulo} ya renderizado, se actualiza estado.`);
-                } else if (mod.estado === "completado" && mod.resultado && Object.keys(mod.resultado).length > 0) {
-                    console.log(`✅ Cargando módulo ${mod.nombre_modulo} → ${ruta}`);
-                    loadHTML(ruta, nombreTargetElement, mod);
-                } else {
-                    console.log(`⏳ Módulo ${mod.nombre_modulo} aún en proceso, esperando resultados...`);
+                const data = await resp.json(); // array de resultados
+
+                if (!Array.isArray(data) || data.length === 0) {
+                console.warn("No se recibieron módulos todavía");
+                return;
                 }
-            });
+                // console.log("Resultados recibidos:", data);
+                // console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
 
+                // 👉 recorrer todos los módulos
+                data.forEach(mod => {
+                    const ruta = rutaModulos[mod.nombre_modulo];
+                    if (!ruta) {
+                        console.warn("No hay ruta definida para módulo:", mod.nombre_modulo);
+                        return;
+                    }
+                    console.log("Modulo: ", mod)
+                    // Si ya existe el bloque de ese módulo, lo actualizamos en vez de volverlo a crear
+                    if (document.querySelector(`#mod-${mod.id}`)) {
+                        console.log(`Módulo ${mod.nombre_modulo} ya renderizado, se actualiza estado.`);
+                    } else if (mod.estado === "completado" && mod.resultado && Object.keys(mod.resultado).length > 0) {
+                        console.log(`✅ Cargando módulo ${mod.nombre_modulo} → ${ruta}`);
+                        loadHTML(ruta, nombreTargetElement, mod);
 
-            // Actualizamos el estado del módulo en el frontend
-            const moduleStatusElement = document.getElementById('module-status');
-            if (moduleStatusElement) {
-                moduleStatusElement.textContent = data.estado;
-                if (data.estado === 'completado') {
-                    moduleStatusElement.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
-                    moduleStatusElement.classList.add('text-green-600');
-                } else if (data.estado === 'en_proceso') {
-                    moduleStatusElement.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
-                    moduleStatusElement.classList.add('text-yellow-600');
-                } else if (data.estado === 'error') {
-                    moduleStatusElement.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
-                    moduleStatusElement.classList.add('text-red-600');
+                    } else {
+                        console.log(`⏳ Módulo ${mod.nombre_modulo} aún en proceso, esperando resultados...`);
+                    }
+                });     
+                // Actualizo el estado general del escaneo
+                await actualizarEstado();
+                
+                // Si ya terminaron todos los módulos del escaneo (éxito o error), dejo de consultar al servidor.
+                const allFinished = data.length > 0 && data.every(r => r.estado === 'completado' || r.estado === 'error');
+                if (allFinished) {
+                    console.log("Todos los módulos han finalizado, deteniendo polling.");
+                    clearInterval(poller);
+           
                 }
-            }
 
-            const allFinished = data.length > 0 && data.every(r => r.estado === 'completado' || r.estado === 'error');
-            if (allFinished) {
-                clearInterval(poller);
-                // opcional: mostrar toast o abrir modal
-            }
             } catch (err) {
             console.error('fetch error', err);
             }
@@ -117,6 +148,23 @@
 
 
     //AUXILIARES
+    // Funcion para actualizar estado de escaneo en el header
+    async function actualizarEstado() {
+        try {
+            const resp = await fetch(`/escaneo/${escaneoId}/status/`);
+            const data = await resp.json();
+            estadoSpan.textContent = data.estado;
+            estadoSpan.classList.remove('text-success', 'text-warning', 'text-danger');
+
+            if(data.estado === 'completado') estadoSpan.classList.add('text-success');
+            else if(data.estado === 'en_proceso') estadoSpan.classList.add('text-warning');
+            else estadoSpan.classList.add('text-danger');
+        } catch(err) {
+            console.error('Error actualizando estado del escaneo:', err);
+        }
+}
+
+
     // Función para cargar HTML externo y traer los visuals de cada modulo
     async function loadHTML(file, targetElement, data) {
         try {

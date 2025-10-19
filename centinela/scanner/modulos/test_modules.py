@@ -8,23 +8,23 @@
 #     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 #DORKS
-# from scan_dorks import run_dorks
-# import json
-# from typing import Optional, List, Dict
-
-# if __name__ == "__main__":
-#     target = "elvillegas.cl"   # cámbialo por la IP/domino que quieras probar
-#     resultado: List[Dict] = run_dorks(target)
-#     print(json.dumps(resultado, indent=2, ensure_ascii=False))
-
-#DNS
-from scan_dns import run_dns
+from scan_dorks import run_dorks
 import json
+from typing import Optional, List, Dict
 
 if __name__ == "__main__":
-    target = "educativaipchile.cl"   # cámbialo por la IP/domino que quieras probar
-    resultado = run_dns(target)
+    target = "madica.it"   # cámbialo por la IP/domino que quieras probar
+    resultado: List[Dict] = run_dorks(target)
     print(json.dumps(resultado, indent=2, ensure_ascii=False))
+
+#DNS
+# from scan_dns import run_dns
+# import json
+
+# if __name__ == "__main__":
+#     target = "educativaipchile.cl"   # cámbialo por la IP/domino que quieras probar
+#     resultado = run_dns(target)
+#     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 #WHOIS
 # import json

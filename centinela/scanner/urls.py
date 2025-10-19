@@ -21,6 +21,8 @@ urlpatterns = [
     path('register/', views.register_view, name='register_view'),                           #vista que yo defino
     path('logout/', views.logout_view, name='logout_view'),                                 #ocupa vista predefinida
     path("modules/<str:name>/", views.module_visual, name="module_visual"),  # Vista para renderizar los visuals de cada módulo, esta api sirve los fragmentos html
+    path("scan_report/<int:escaneo_id>/", views.scan_report_view, name="scan_report_view"), # Vista para el informe detallado de un escaneo específico
+    path("escaneo/<int:escaneo_id>/status/", views.escaneo_status_view, name="escaneo_status_view"),  # Vista para obtener el estado de un escaneo específico
 
 
     # Las siguientes vistas son para configurar mas adelante
