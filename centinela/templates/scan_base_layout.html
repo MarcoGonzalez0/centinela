@@ -21,41 +21,48 @@
 
 
 {% if escaneo %}
-<!-- Header con URL objetivo del escaneo y un boton de descargar informe -->
-<div id="header-escaneo" class="container-fluid bg-dark border-bottom border-secondary py-3 px-4 d-flex justify-content-between align-items-center">
+<!-- Header con información del escaneo -->
+<div id="header-escaneo" class="container-fluid bg-dark border-bottom border-secondary rounded-3 shadow-sm py-3 px-4 my-3">
 
-  <!-- Información del escaneo -->
-  <div class="d-flex align-items-center gap-4 text-light small">
-    <div class="d-flex flex-column">
-      <span class="fw-semibold text-white">Escaneo #{{ escaneo.id }}</span>
-      <span class="text-secondary">Objetivo: {{ escaneo.objetivo }}</span>
+  <div class="row align-items-center g-3">
+
+    <!-- Información principal -->
+    <div class="col-12 col-md-6 d-flex align-items-start gap-3 text-light">
+      <div class="flex-grow-1">
+        <span class="fw-semibold text-white d-block fs-5 mb-1">Escaneo #{{ escaneo.id }}</span>
+        <span class="text-white fw-semibold d-block fs-6">
+          Objetivo: <span class="fw-semibold fs-5 text-success">{{ escaneo.objetivo }}</span>
+        </span>
+      </div>
     </div>
-    <div class="d-none d-sm-flex flex-column text-end">
-      <span class="text-uppercase text-muted small">Estado</span>
-      <span class="fw-semibold 
+
+    <!-- Estado del escaneo -->
+    <div class="col-6 col-md-3 text-md-end text-light">
+      <span class="fw-semibold d-block text-white fs-6">Estado</span>
+      <span id="escaneo-estado" class="fw-semibold fs-5
         {% if escaneo.estado == 'completado' %}text-success
         {% elif escaneo.estado == 'en_proceso' %}text-warning
-        {% else %}text-danger{% endif %}" id="escaneo-estado">
+        {% else %}text-danger{% endif %}">
         {{ escaneo.estado|capfirst }}
       </span>
     </div>
-  </div>
-  {% endif %}
 
-  {% if escaneo.estado == 'completado' %}
-  <!-- Botón de acción -->
-  <div>
-    <a href="{% url 'scan_report_view' escaneo.id %}" class="btn btn-primary d-flex align-items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-        <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
-        <path d="M7.646 10.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 1 0-.708-.708L8.5 9.293V1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3z"/>
-      </svg>
-      Descargar informe
-    </a>
-  </div>
-  {% endif %}
+    <!-- Botón de acción -->
+    <div class="col-6 col-md-3 text-md-end" id="btn-informe">
+      <a href="{% url 'scan_report_view' escaneo.id %}" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fs-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 10.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 1 0-.708-.708L8.5 9.293V1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3z"/>
+        </svg>
+        Descargar informe
+      </a>
+    </div>
 
+  </div>
 </div>
+{% endif %}
+
+
 
 <!-- Contenedor principal -->
 <!-- 3 Columnas -->
@@ -83,7 +90,7 @@
         
         if (!escaneoId) return; // nada que vigilar
 
-        const intervalMs = 2000; // poll cada 2s (ajusta si quieres)       
+        const intervalMs = 1000; // poll cada 1s (ajusta si quieres)
 
         async function fetchResults(){
             try {
@@ -153,16 +160,22 @@
         try {
             const resp = await fetch(`/escaneo/${escaneoId}/status/`);
             const data = await resp.json();
+
+            const btnInforme = document.getElementById("btn-informe");
+
             estadoSpan.textContent = data.estado;
             estadoSpan.classList.remove('text-success', 'text-warning', 'text-danger');
 
-            if(data.estado === 'completado') estadoSpan.classList.add('text-success');
+            if(data.estado === 'completado') {
+                estadoSpan.classList.add('text-success');
+                btnInforme.classList.remove('d-none');
+            }
             else if(data.estado === 'en_proceso') estadoSpan.classList.add('text-warning');
             else estadoSpan.classList.add('text-danger');
         } catch(err) {
             console.error('Error actualizando estado del escaneo:', err);
         }
-}
+    }
 
 
     // Función para cargar HTML externo y traer los visuals de cada modulo

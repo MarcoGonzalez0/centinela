@@ -2,6 +2,7 @@
 import io
 from time import sleep, timezone
 import json
+from datetime import datetime
 
 #Django
 from django.http import HttpResponse, JsonResponse
@@ -70,7 +71,7 @@ def index_view(request): # el escaneo se hace aqui
                         if modulo.lower() == "nmap": # nmap es pesado, va en cola heavy
                             run_modulo_task.apply_async(args=[resultado.id], queue="heavy") 
                         else: # el resto va en cola default
-                            sleep(1.5) # Simulamos retardo para pruebas
+                            sleep(1.2) # Simulamos retardo para pruebas
                             run_modulo_task.delay(resultado.id) # Llamada asíncrona con Celery
 
                     messages.success(request, f'Scan iniciado para {target} con módulos: {", ".join(modules)}')
