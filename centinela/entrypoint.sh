@@ -3,11 +3,11 @@
 
 # Esperar a MySQL
 echo "Esperando a MySQL..."
-/wait-for-it.sh db:3306 --timeout=90 --strict -- echo "MySQL listo"
+/wait-for-it.sh db:3306 --timeout=120 --strict -- echo "MySQL listo"
 
 # Esperar a Redis
 echo "Esperando a Redis..."
-/wait-for-it.sh redis:6379 --timeout=30 --strict -- echo "Redis listo"
+/wait-for-it.sh redis:6379 --timeout=90 --strict -- echo "Redis listo"
 
 if [ "$ROLE" = "worker" ]; then
     echo "Iniciando Celery Worker..."

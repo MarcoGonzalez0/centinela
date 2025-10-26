@@ -48,15 +48,15 @@ def _perform_google_search(api_key: str, cx: str, query: str, start: int = 1, nu
 # ---------------- Dorks comunes ----------------
 COMMON_DORKS = [
     # Archivos de bases de datos / dumps
-    ['site:{domain} filetype:sql (password|passwd|pwd|secret)', "Archivos SQL con posibles contraseñas"],
+    ['site:{domain} filetype:sql', "Archivos SQL"],
     # Archivos de configuración / credenciales
-    ['site:{domain} (filetype:env OR filetype:cfg OR filetype:conf OR filetype:ini) (password|secret|passwd)', "Archivos de configuración con posibles credenciales"],
+    ['site:{domain} (filetype:env OR filetype:cfg OR filetype:conf OR filetype:ini)', "Archivos de configuración"],
     # Backups e índices públicos
-    ['site:{domain} intitle:"index of" (backup|backup.zip|backup.tar|.bak)', "Backups e índices públicos"],
+    ['site:{domain} intitle:"index of" (backup OR .bak)', "Backups e índices públicos"],
     # Archivos Office / pdf con posible información sensible
-    ['site:{domain} (filetype:doc OR filetype:docx OR filetype:pdf) ("password" OR "credentials" OR "secret")', "Archivos Office/PDF con posible información sensible"],
+    ['site:{domain} (filetype:doc OR filetype:docx OR filetype:pdf)', "Archivos DOC/PDF con posible información sensible"],
     # URLs expuestas, archivos de logs o config
-    ['site:{domain} inurl:(/backup|/admin|/config|/logs) -github.com', "URLs expuestas, archivos de logs o config"]
+    ['site:{domain} inurl:(admin OR dashboard OR config OR configs OR log OR logs OR "error.log" OR "access.log" OR "wp-config.php") -site:github.com -site:gitlab.com -site:stackoverflow.com', "URLs expuestas, archivos de logs o config"]
 ]
 
 # ---------------- Runner público ----------------
