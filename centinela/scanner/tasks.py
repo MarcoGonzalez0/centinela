@@ -29,7 +29,7 @@ def run_modulo_task(resultado_id):
         modulos_disponibles = {
             'dns': run_dns,
             'dorks': run_dorks,
-            'headerhttp': run_headerhttp,
+            'headers': run_headerhttp,
             'nmap': run_nmap,
             'ssl': run_ssl,
             'whois': run_whois

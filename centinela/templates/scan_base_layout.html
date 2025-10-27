@@ -11,9 +11,9 @@
 <!-- cargamos los scripts de gráficos -->
 <script src="{% static 'js/charts/dns.js' %}"></script>
 <script src="{% static 'js/charts/dorks.js' %}"></script>
-<!-- <script src="{% static 'js/charts/headerhttp.js' %}"></script>
+<script src="{% static 'js/charts/headerhttp.js' %}"></script>
 <script src="{% static 'js/charts/nmap.js' %}"></script>
-<script src="{% static 'js/charts/ssl.js' %}"></script>
+<!-- <script src="{% static 'js/charts/ssl.js' %}"></script>
 <script src="{% static 'js/charts/whois.js' %}"></script> -->
 
 {% endblock %}
@@ -75,7 +75,7 @@
     const rutaModulos = {
         'dns': 'dns_visuals.html',
         'dorks': 'dorks_visuals.html',
-        'headerhttp': 'headerhttp_visuals.html',
+        'headers': 'headerhttp_visuals.html',
         'nmap': 'nmap_visuals.html',
         'ssl': 'ssl_visuals.html',
         'whois': 'whois_visuals.html',
@@ -196,6 +196,7 @@
             setTimeout(() => {
                 // Llamo a la función del módulo que inicializa los gráficos
                 const modulo = data.nombre_modulo; // ej "dns"
+                console.log(`Buscando función de inicialización para módulo: ${modulo}`);
                 if (window.Visuals && typeof window.Visuals[modulo] === 'function') { //Si puede acceder a windows.visuals y existe la función
                     console.log(`Iniciando gráficos para módulo ${modulo}`, data.resultado);
                     window.Visuals[modulo](data.resultado); // paso los datos JSON

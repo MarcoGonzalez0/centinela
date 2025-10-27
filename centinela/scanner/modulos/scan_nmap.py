@@ -13,8 +13,8 @@ def run_nmap(ip, service_detection=True):
     result = []
 
     # Lista de puertos comunes para escaneo intermedio
-    puertos = "21,22,23,25,53,80,110,143,443,3306,3389"
-    #puertos = "22,80,443,3306"
+    # puertos = "21,22,23,25,53,80,110,143,443,3306,3389"
+    puertos = "22,80,443,3306"
 
     try:
         cmd = ["nmap", "-Pn", "-T4", "-p", puertos, "-oX", "-"]  # XML directo a stdout

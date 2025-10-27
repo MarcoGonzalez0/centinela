@@ -1,21 +1,21 @@
 # NMAP
-# from scan_nmap import run_nmap
-# import json
-
-# if __name__ == "__main__":
-#     target = "educativaipchile.cl"   # cámbialo por la IP/domino que quieras probar
-#     resultado = run_nmap(target, service_detection=True)
-#     print(json.dumps(resultado, indent=2, ensure_ascii=False))
-
-#DORKS
-from scan_dorks import run_dorks
+from scan_nmap import run_nmap
 import json
-from typing import Optional, List, Dict
 
 if __name__ == "__main__":
-    target = "madica.it"   # cámbialo por la IP/domino que quieras probar
-    resultado: List[Dict] = run_dorks(target)
+    target = "owasp.org"   # cámbialo por la IP/domino que quieras probar
+    resultado = run_nmap(target, service_detection=True)
     print(json.dumps(resultado, indent=2, ensure_ascii=False))
+
+#DORKS
+# from scan_dorks import run_dorks
+# import json
+# from typing import Optional, List, Dict
+
+# if __name__ == "__main__":
+#     target = "madica.it"   # cámbialo por la IP/domino que quieras probar
+#     resultado: List[Dict] = run_dorks(target)
+#     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 #DNS
 # from scan_dns import run_dns
@@ -49,6 +49,6 @@ if __name__ == "__main__":
 # import json
 
 # if __name__ == "__main__":
-#     domain = "educativaipchile.cl"   # cámbialo por la IP/domino que quieras probar
+#     domain = "hola.cl"   # cámbialo por la IP/domino que quieras probar
 #     scan_result = run_headerhttp(domain)
 #     print(json.dumps(scan_result, indent=2, ensure_ascii=False))

@@ -67,12 +67,18 @@
             // Mostrar error en consola (para debugging)
             console.error("Error al renderizar gráficos DNS:", err);
 
-            // Mostrarlo en la UI
-            const container = document.querySelector('.container-errores');
-            if (container) {
-                container.innerHTML = `<strong class="font-bold">Error:</strong>
-            <span class="block sm:inline">⚠️ Error al renderizar datos: ${err.message}</span>`;
-                container.classList.remove('hidden');
+            // Buscar el contenedor de errores dentro de la card del módulo DNS
+            const chartEl = document.getElementById('dnsChart');
+            if (chartEl) {
+                // Subir al contenedor padre de la card y buscar el contenedor de errores
+                const moduleCard = chartEl.closest('.bg-light');
+                const container = moduleCard?.querySelector('.container-errores');
+                
+                if (container) {
+                    container.innerHTML = `<strong class="fw-bold">Error:</strong>
+                        <span class="block sm:inline">⚠️ Error al renderizar datos: ${err.message}</span>`;
+                    container.classList.remove('d-none');
+                }
             }
         }
 }
