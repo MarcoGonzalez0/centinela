@@ -14,8 +14,18 @@
 
             // === Verificar si hubo un error de conexión ===
             if (datos.error || Object.keys(datos.headers).length === 0) {
-                const container = document.querySelector('.container-errores');
                 const tbody = document.getElementById('headersTableBody');
+                const chartEl = document.getElementById('headersChart');
+                
+                // Buscar contenedor de errores en la card específica
+                let container = null;
+                if (tbody) {
+                    const moduleCard = tbody.closest('.bg-light');
+                    container = moduleCard?.querySelector('.container-errores');
+                } else if (chartEl) {
+                    const moduleCard = chartEl.closest('.bg-light');
+                    container = moduleCard?.querySelector('.container-errores');
+                }
                 
                 // Mostrar error en el contenedor de errores
                 if (container) {
@@ -32,7 +42,6 @@
                 }
                 
                 // Ocultar canvas vacío
-                const chartEl = document.getElementById('headersChart');
                 if (chartEl) {
                     chartEl.parentElement.style.display = 'none';
                 }

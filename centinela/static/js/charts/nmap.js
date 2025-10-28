@@ -14,8 +14,18 @@
 
             // === Verificar si hubo un error ===
             if (datos.length === 0 || (datos[0] && datos[0].error)) {
-                const container = document.querySelector('.container-errores');
                 const tbody = document.getElementById('nmapTableBody');
+                const chartEl = document.getElementById('nmapChart');
+                
+                // Buscar contenedor de errores en la card específica
+                let container = null;
+                if (tbody) {
+                    const moduleCard = tbody.closest('.bg-light');
+                    container = moduleCard?.querySelector('.container-errores');
+                } else if (chartEl) {
+                    const moduleCard = chartEl.closest('.bg-light');
+                    container = moduleCard?.querySelector('.container-errores');
+                }
                 
                 if (container) {
                     container.innerHTML = `
@@ -30,7 +40,6 @@
                     container.classList.remove('d-none');
                 }
                 
-                const chartEl = document.getElementById('nmapChart');
                 if (chartEl) {
                     chartEl.parentElement.style.display = 'none';
                 }
@@ -168,7 +177,19 @@
         } catch (err) {
             console.error("Error al renderizar gráficos Nmap:", err);
             
-            const container = document.querySelector('.container-errores');
+            // Buscar contenedor de errores en la card específica
+            const tbody = document.getElementById('nmapTableBody');
+            const chartEl = document.getElementById('nmapChart');
+            
+            let container = null;
+            if (tbody) {
+                const moduleCard = tbody.closest('.bg-light');
+                container = moduleCard?.querySelector('.container-errores');
+            } else if (chartEl) {
+                const moduleCard = chartEl.closest('.bg-light');
+                container = moduleCard?.querySelector('.container-errores');
+            }
+            
             if (container) {
                 container.innerHTML = `<strong class="fw-bold">Error:</strong>
                     <span class="block sm:inline">⚠️ Error al renderizar datos: ${err.message}</span>`;

@@ -1,11 +1,11 @@
 # NMAP
-from scan_nmap import run_nmap
-import json
+# from scan_nmap import run_nmap
+# import json
 
-if __name__ == "__main__":
-    target = "owasp.org"   # cámbialo por la IP/domino que quieras probar
-    resultado = run_nmap(target, service_detection=True)
-    print(json.dumps(resultado, indent=2, ensure_ascii=False))
+# if __name__ == "__main__":
+#     target = "owasp.org"   # cámbialo por la IP/domino que quieras probar
+#     resultado = run_nmap(target, service_detection=True)
+#     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 #DORKS
 # from scan_dorks import run_dorks
@@ -27,20 +27,20 @@ if __name__ == "__main__":
 #     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 #WHOIS
-# import json
-# from scan_whois import run_whois
+import json
+from scan_whois import run_whois
 
-# if __name__ == "__main__":
-#     target = "elvillegas.cl"   # cámbialo por la IP/domino que quieras probar
-#     resultado = run_whois(target)
-#     print(json.dumps(resultado, indent=2, ensure_ascii=False))
+if __name__ == "__main__":
+    target = "hola.cl"   # cámbialo por la IP/domino que quieras probar
+    resultado = run_whois(target)
+    print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
 #SSL
 # from scan_ssl import run_ssl
 # import json
 
 # if __name__ == "__main__":
-#     target = "educativaipchile.cl"   # cámbialo por la IP/domino que quieras probar
+#     target = "crouton.net"   # cámbialo por la IP/domino que quieras probar
 #     resultado = run_ssl(target)
 #     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
