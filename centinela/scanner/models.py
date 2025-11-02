@@ -35,6 +35,7 @@ class resultadoModulo(models.Model):
     ], default='pendiente')
     resultado = models.JSONField()  # JSON del resultado
     fecha_ejecucion = models.DateTimeField(auto_now_add=True)
+    analisis_ia = models.JSONField(null=True, blank=True)  # Resultado del análisis IA
 
     def __str__(self):
         return f"Resultado for {self.nombre_modulo} in Escaneo {self.escaneo.id}"

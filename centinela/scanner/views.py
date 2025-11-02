@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 
 #reportlabs para PDF
 from reportlab.lib.pagesizes import A4
@@ -18,7 +19,9 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 
+# Importaciones desde archivos locales
 from scanner.tasks import run_modulo_task
+from .analisis_ia import main_analisis_ia
 
 #Forms
 from .forms import CustomUserCreationForm, ScanForm  # Importar nuestro formulario personalizado
@@ -240,3 +243,44 @@ def escaneo_status_view(request, escaneo_id):
         "estado": escaneo.estado,
         "id": escaneo.id
     })
+
+@require_http_methods(["POST"])
+def analizar_modulo_ia(request):
+    """
+    Endpoint para análisis de módulos con IA
+    Recibe: {"nombre_modulo": str, "resultado": dict, "modulo_id": int}
+    Retorna: {"explicacion": str, "riesgo": str, "color": str}
+    """
+    try:
+        data = json.loads(request.body)
+        nombre_modulo = data.get('nombre_modulo')
+        resultado = data.get('resultado')
+        escaneo_id = data.get('escaneo_id')
+
+        if not escaneo_id:
+            return JsonResponse({
+                "error": "Falta escaneo_id"
+            }, status=400)
+        
+        if not nombre_modulo or not resultado:
+            return JsonResponse({
+                "error": "Datos incompletos"
+            }, status=400)
+        
+        # Llamar al análisis con IA
+        analisis = main_analisis_ia(nombre_modulo, resultado)
+
+        # Guardar análisis en la base de datos
+        resultado_modulo = resultadoModulo.objects.filter(escaneo__id=escaneo_id, nombre_modulo=nombre_modulo, escaneo__user=request.user).first()
+        if resultado_modulo:
+            resultado_modulo.analisis_ia = analisis
+            resultado_modulo.save()
+
+        return JsonResponse(analisis)
+        
+    except Exception as e:       
+        return JsonResponse({
+            "explicacion": "Error al procesar la solicitud.",
+            "riesgo": "Error",
+            "color": "#dc3545"
+        }, status=500)

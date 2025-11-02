@@ -8,7 +8,7 @@
         <div class="row g-3 align-items-center">
             <!-- Nombre del módulo -->
             <div class="col text-truncate fw-semibold" style="font-size: 1.125rem; color: #212529;">
-                {% block module_name %}Nombre del Módulo{% endblock %}
+                <span class="module_name text-uppercase">Cargando...</span>
             </div>
 
             <!-- Botón Reintentar -->
@@ -29,7 +29,7 @@
 
             <!-- Integración con IA -->
             <div class="col d-flex justify-content-end">
-                <button class="btn btn-outline-secondary btn-sm">
+                <button class="btn btn-outline-secondary btn-sm btn-analisis-ia" data-module-name="">
                     🤖 Explicación con IA
                 </button>
             </div>
@@ -41,6 +41,18 @@
     <div class="container-errores alert-danger mt-3 p-2 rounded d-none" style="max-height: 200px; overflow:auto; font-size: 0.875rem; background-color:indianred;">
         <!-- Errores del módulo -->
     </div>
+
+    <!-- DIV de análisis IA (mejorado) -->
+    <div class="container-analisis-ia mt-3 p-3 rounded-3 border d-none shadow-sm bg-primary" 
+        style="font-size: 0.9rem;">
+        <div class="d-flex align-items-start gap-3">
+            <span class="badge px-3 py-2 analisis-badge text-light fw-bold shadow-sm text-uppercase">
+            Riesgo
+            </span>
+            <p class="mb-0 analisis-texto text-white fw-bold" style="line-height: 1.4;"></p>
+        </div>
+    </div>
+
 
     <!-- Contenido dinámico -->
     {% block module_content %}

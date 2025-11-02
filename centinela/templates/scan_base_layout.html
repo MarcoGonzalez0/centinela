@@ -3,6 +3,8 @@
 {% block extra_head %}
 <script>
     window.Visuals = {}; // espacio de nombres global para gráficos
+    window.Modulosdata = {}; // espacio de nombres global para datos de módulos (para integración con IA)
+    window.escaneoId = "{{ escaneo.id|default:'' }}"; // ID del escaneo actual
 </script>
 
 <!-- Chart.js desde CDN -->
@@ -15,6 +17,9 @@
 <script src="{% static 'js/charts/nmap.js' %}"></script>
 <script src="{% static 'js/charts/ssl.js' %}"></script>
 <script src="{% static 'js/charts/whois.js' %}"></script>
+
+<!-- cargamos el script de análisis IA -->
+<script src="{% static 'js/analisis_ia.js' %}"></script>
 
 {% endblock %}
 
@@ -81,7 +86,7 @@
         'whois': 'whois_visuals.html',
     };
 
-    const escaneoId = "{{ escaneo.id|default:'' }}";
+    const escaneoId = window.escaneoId; // ID del escaneo actual
     const nombreTargetElement = '#grid-modulos'; // Selector del contenedor donde se cargarán los módulos
     const estadoSpan = document.getElementById('escaneo-estado'); // Span donde se muestra el estado del escaneo
 
@@ -106,11 +111,11 @@
                 const data = await resp.json(); // array de resultados
 
                 if (!Array.isArray(data) || data.length === 0) {
-                console.warn("No se recibieron módulos todavía");
-                return;
+                    console.warn("No se recibieron módulos todavía");
+                    return;
                 }
-                // console.log("Resultados recibidos:", data);
-                // console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
+                console.log("Resultados recibidos:", data);
+                console.log("Modulo recibido:", data[0].nombre_modulo, "→ ruta:", rutaModulos[data[0].nombre_modulo]);
 
                 // 👉 recorrer todos los módulos
                 data.forEach(mod => {
@@ -139,6 +144,7 @@
                 if (allFinished) {
                     console.log("Todos los módulos han finalizado, deteniendo polling.");
                     clearInterval(poller);
+                    await actualizarEstado();
            
                 }
 
@@ -181,6 +187,7 @@
     // Función para cargar HTML externo y traer los visuals de cada modulo
     async function loadHTML(file, targetElement, data) {
         try {
+            // Fetch del archivo HTML del módulo
             const response = await fetch(`modules/${file}`);
             const html = await response.text();
 
@@ -190,12 +197,48 @@
             wrapper.id = `mod-${data.id}`; // id único por módulo
             wrapper.innerHTML = html;
 
+            // Establecer el nombre del módulo en el header
+            const moduleNameSpan = wrapper.querySelector('.module_name');
+            moduleNameSpan.textContent = data.nombre_modulo.toUpperCase();
+
+            // Establecer el nombre del módulo en el botón de análisis IA
+            const iaButton = wrapper.querySelector('.btn-analisis-ia');
+            iaButton.setAttribute('data-module-name', data.nombre_modulo);
+
             // Agregarlo al grid (appendChild en vez de innerHTML =)
             document.querySelector(targetElement).appendChild(wrapper);
+
+            // Mostrar analisis IA si ya existe, no antes ya que primero se debe generar la card
+            if (data.analisis_ia) {
+                console.log("Mostrando análisis IA existente para módulo:", data.nombre_modulo);
+                console.log(data.analisis_ia);
+
+                const btn_ia = wrapper.querySelector('.btn-analisis-ia');
+                // Buscar la card del módulo
+                const moduleCard = btn_ia.closest('.bg-light');
+                const containerAnalisis = moduleCard.querySelector('.container-analisis-ia');
+
+                // Buscar elementos dentro de la card
+                const badge = containerAnalisis.querySelector('.analisis-badge');
+                const texto = containerAnalisis.querySelector('.analisis-texto');
+
+                // Rellenar con datos del análisis IA
+                badge.textContent = `Riesgo ${data.analisis_ia.riesgo}`;
+                badge.style.backgroundColor = data.analisis_ia.color;
+                texto.textContent = data.analisis_ia.explicacion;
+
+                containerAnalisis.classList.remove('d-none');
+                containerAnalisis.classList.add('alert-info');
+
+                // Restaurar botón
+                btn.innerHTML = '✅ Analizado';
+            }
 
             setTimeout(() => {
                 // Llamo a la función del módulo que inicializa los gráficos
                 const modulo = data.nombre_modulo; // ej "dns"
+                window.Modulosdata[modulo] = data.resultado; // guardo los datos para posible uso por IA
+
                 console.log(`Buscando función de inicialización para módulo: ${modulo}`);
                 if (window.Visuals && typeof window.Visuals[modulo] === 'function') { //Si puede acceder a windows.visuals y existe la función
                     console.log(`Iniciando gráficos para módulo ${modulo}`, data.resultado);

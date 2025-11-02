@@ -57,11 +57,42 @@
             }
 
             // === Calcular edad y tiempo hasta expiración ===
-            const parseDate = (dateStr) => {
-                if (!dateStr) return null;
-                // Formato: "2021-06-10 06:45:24 CLST"
-                const parts = dateStr.split(' ');
-                return new Date(parts[0]);
+            const parseDate = (dateInput) => {
+                // Si es un array, tomar el primer elemento
+                let dateStr = dateInput;
+                if (Array.isArray(dateInput)) {
+                    dateStr = dateInput[0];
+                }
+                
+                // Validar que sea un string válido
+                if (!dateStr || typeof dateStr !== 'string' || dateStr.trim() === '') {
+                    console.warn("Fecha inválida recibida:", dateInput, "Tipo:", typeof dateInput);
+                    return null;
+                }
+                
+                try {
+                    // Formato esperado: "2021-06-10 06:45:24 CLST" o "2003-08-25T18:12:17"
+                    // Primero separar por espacios (si tiene timezone)
+                    const parts = dateStr.trim().split(' ');
+                    let datePart = parts[0]; // "2021-06-10" o "2003-08-25T18:12:17"
+                    
+                    // Si tiene formato ISO (con T), separar por T
+                    if (datePart.includes('T')) {
+                        datePart = datePart.split('T')[0]; // "2003-08-25"
+                    }
+                    
+                    // Validar que sea una fecha válida
+                    const date = new Date(datePart);
+                    if (isNaN(date.getTime())) {
+                        console.warn("Fecha no parseable:", datePart);
+                        return null;
+                    }
+                    
+                    return date;
+                } catch (err) {
+                    console.warn("Error parseando fecha:", dateStr, err);
+                    return null;
+                }
             };
 
             const creationDate = parseDate(datos.creation_date);

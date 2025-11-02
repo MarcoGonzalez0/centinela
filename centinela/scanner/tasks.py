@@ -55,6 +55,7 @@ def run_modulo_task(resultado_id):
     except Exception as e:
         
         print(f"Error al ejecutar el módulo: {e}")
+        messages.error(f"Error al ejecutar el módulo: {e}")
         try:
             with transaction.atomic():
                 resultado = resultadoModulo.objects.get(id=resultado_id)

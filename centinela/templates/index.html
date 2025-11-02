@@ -119,8 +119,12 @@
 
 {% block extra_js %}
 {{ block.super }}
-<script src="{% static 'js/modulosDesplegables.js' %}"></script>
 <script>
+  // Lógica para el dropdown de selección de módulos
+  document.getElementById('dropdownButton').addEventListener('click', () => {
+    document.getElementById('dropdownMenu').classList.toggle('hidden');
+  });
+
   // Inicializar tooltips de Bootstrap
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
