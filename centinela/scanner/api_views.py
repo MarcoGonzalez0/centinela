@@ -6,7 +6,7 @@ from .models import resultadoModulo
 class ResultadoModuloSerializer(serializers.ModelSerializer):
     class Meta:
         model = resultadoModulo
-        fields = ['id', 'escaneo', 'nombre_modulo', 'estado', 'resultado', 'fecha_ejecucion']
+        fields = ['id', 'escaneo', 'nombre_modulo', 'estado', 'resultado', 'fecha_ejecucion', 'analisis_ia']
 
 # ViewSet
 class ResultadoModuloViewSet(viewsets.ModelViewSet):

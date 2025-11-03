@@ -21,6 +21,9 @@
 <!-- cargamos el script de análisis IA -->
 <script src="{% static 'js/analisis_ia.js' %}"></script>
 
+<!-- manejo botones explicaciones breves -->
+<script src="{% static 'js/manejoBtnExp.js' %}"></script>
+
 {% endblock %}
 
 
@@ -208,6 +211,9 @@
             // Agregarlo al grid (appendChild en vez de innerHTML =)
             document.querySelector(targetElement).appendChild(wrapper);
 
+            // 🎯 INICIALIZAR TOOLTIPS PARA ESTE MÓDULO
+            initializeTooltipsForModule(wrapper, data.nombre_modulo);
+
             // Mostrar analisis IA si ya existe, no antes ya que primero se debe generar la card
             if (data.analisis_ia) {
                 console.log("Mostrando análisis IA existente para módulo:", data.nombre_modulo);
@@ -231,7 +237,8 @@
                 containerAnalisis.classList.add('alert-info');
 
                 // Restaurar botón
-                btn.innerHTML = '✅ Analizado';
+                btn_ia.disabled = true;
+                btn_ia.innerHTML = '✅ Analizado';
             }
 
             setTimeout(() => {
@@ -253,4 +260,5 @@
             console.error('Error cargando el archivo:', error);
         }
     }
+    
 </script>

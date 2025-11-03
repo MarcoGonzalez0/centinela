@@ -11,6 +11,20 @@
                 <span class="module_name text-uppercase">Cargando...</span>
             </div>
 
+            <!-- Explicación breve del módulo -->
+            <div class="col d-flex justify-content-end fw-semibold" style="font-size: 1.125rem; color: #212529;">
+                <button type="button" class="link-explicacion btn btn-link text-decoration-none text-dark p-0">
+                    <span class="fw-bold text-uppercase"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top" 
+                    title="Cargando explicación..."
+                    style="cursor: pointer;"
+                    >¿Qué es? ℹ️</span>
+                </button>
+            </div>
+
+            
+
             <!-- Botón Reintentar -->
             <!-- <div class="col d-flex justify-content-end">
                 <button class="btn btn-primary btn-sm">
@@ -36,7 +50,6 @@
         </div>
     </div>
 
-
     <!-- DIV de errores -->
     <div class="container-errores alert-danger mt-3 p-2 rounded d-none" style="max-height: 200px; overflow:auto; font-size: 0.875rem; background-color:indianred;">
         <!-- Errores del módulo -->
@@ -45,11 +58,11 @@
     <!-- DIV de análisis IA (mejorado) -->
     <div class="container-analisis-ia mt-3 p-3 rounded-3 border d-none shadow-sm bg-primary" 
         style="font-size: 0.9rem;">
-        <div class="d-flex align-items-start gap-3">
-            <span class="badge px-3 py-2 analisis-badge text-light fw-bold shadow-sm text-uppercase">
-            Riesgo
+        <div class="d-flex flex-column gap-2">
+            <span class="badge px-3 py-2 analisis-badge text-dark fw-bold text-uppercase flex-shrink-0 fs-5">
+                Riesgo
             </span>
-            <p class="mb-0 analisis-texto text-white fw-bold" style="line-height: 1.4;"></p>
+            <p class="mb-0 analisis-texto text-white fw-bold flex-grow-1" style="line-height: 1.4;"></p>
         </div>
     </div>
 
@@ -59,4 +72,3 @@
     {% endblock %}
 
 </div>
-

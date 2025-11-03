@@ -77,7 +77,7 @@ def analizar_modulo_con_ia(nombre_modulo: str, resultados: Dict, client: DeepSee
     tipo_modulo = prompts_modulos.get(nombre_modulo, nombre_modulo)
     
     prompt = f"""
-Eres un experto en ciberseguridad explicando resultados a una persona SIN conocimientos técnicos.
+Eres un experto en ciberseguridad explicando resultados a una persona con conocimientos técnicos bajos-medios.
 
 MÓDULO ANALIZADO: {tipo_modulo}
 
@@ -85,10 +85,11 @@ RESULTADOS:
 {resultados_texto}
 
 INSTRUCCIONES:
-1. Explica en 2-3 oraciones SIMPLES qué se encontró y por qué es importante
-2. Usa pocos términos técnicos
+1. Explica en 2-3 oraciones SIMPLES qué se encontró específicamente, por qué es importante y explica los tipos de ataques y/o riesgos asociados.
+2. Usa términos técnicos básicos-medios
 3. Usa analogías simples si es necesario
 4. Clasifica el riesgo como: Bajo, Medio o Alto
+5. Proporciona 1 medida concreta para mitigar el riesgo. Una frase corta con la medida más importante.
 
 CRITERIOS DE RIESGO:
 - Alto: Problemas graves que ponen en peligro la seguridad (certificados vencidos, puertos críticos abiertos, datos sensibles expuestos)
@@ -97,7 +98,7 @@ CRITERIOS DE RIESGO:
 
 FORMATO DE RESPUESTA (solo JSON, nada más):
 {{
-    "explicacion": "Explicación simple en 2-3 oraciones",
+    "explicacion": "Explicación simple en 2-3 oraciones y la medida de mitigación.",
     "riesgo": "Bajo/Medio/Alto"
 }}
 """

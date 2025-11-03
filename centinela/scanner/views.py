@@ -3,6 +3,7 @@ import io
 from time import sleep, timezone
 import json
 from datetime import datetime
+from textwrap import dedent, wrap # Para que explicacion IA no se corta a la mitad
 
 #Django
 from django.http import HttpResponse, JsonResponse
@@ -170,56 +171,103 @@ def logout_view(request):
 def module_visual(request, name):
     return render(request, f"modules/{name}")
 
+
 def scan_report_view(request, escaneo_id):
     try:
-        # Obtener escaneo y sus resultados
+        # Obtener escaneo y resultados
         escaneo = get_object_or_404(Escaneo, id=escaneo_id)
         resultados = resultadoModulo.objects.filter(escaneo=escaneo)
 
-        # Crear un buffer de memoria
+        # Crear buffer PDF
         buffer = io.BytesIO()
         p = canvas.Canvas(buffer, pagesize=A4)
         width, height = A4
 
-        # Margen superior inicial
+        # Margen y posición inicial
+        left_margin = 1 * inch
+        right_margin = width - inch
         y = height - inch
 
         # Encabezado
         p.setFont("Helvetica-Bold", 16)
-        p.drawString(1 * inch, y, f"Informe de Escaneo #{escaneo.id}")
+        p.drawString(left_margin, y, f"Informe de Escaneo #{escaneo.id}")
         y -= 0.4 * inch
         p.setFont("Helvetica", 11)
-        p.drawString(1 * inch, y, f"Objetivo: {escaneo.objetivo}")
+        p.drawString(left_margin, y, f"Objetivo: {escaneo.objetivo}")
         y -= 0.25 * inch
-        p.drawString(1 * inch, y, f"Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+        p.drawString(left_margin, y, f"Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
         y -= 0.5 * inch
 
         # Línea separadora
         p.setStrokeColor(colors.grey)
-        p.line(1 * inch, y, width - inch, y)
+        p.line(left_margin, y, right_margin, y)
         y -= 0.4 * inch
 
-        # Contenido de los resultados
+        # Iterar resultados
         for r in resultados:
+            # Saltar página si es necesario
+            if y < 1 * inch:
+                p.showPage()
+                y = height - inch
+
+            # Módulo y estado
             p.setFont("Helvetica-Bold", 12)
-            p.drawString(1 * inch, y, f"Módulo: {r.nombre_modulo}")
+            p.drawString(left_margin, y, f"Módulo: {r.nombre_modulo}")
             y -= 0.2 * inch
 
             p.setFont("Helvetica", 10)
-            p.drawString(1 * inch, y, f"Estado: {r.estado.capitalize()}")
-            y -= 0.2 * inch
+            p.drawString(left_margin, y, f"Estado: {r.estado.capitalize()}")
+            y -= 0.25 * inch
 
-            # Convertir JSON a texto legible (solo lo esencial)
+            # Resultado JSON
             resultado_texto = json.dumps(r.resultado, indent=2, ensure_ascii=False)
             for linea in resultado_texto.split("\n"):
-                if y < 1 * inch:  # Crear nueva página si no hay espacio
+                if y < 1 * inch:
                     p.showPage()
                     y = height - inch
-                p.drawString(1.2 * inch, y, linea[:100])  # recorta líneas largas
-                y -= 0.18 * inch
+                    p.setFont("Helvetica", 10)
+                for sublinea in wrap(linea, width=100):
+                    p.drawString(left_margin + 0.2 * inch, y, sublinea)
+                    y -= 0.18 * inch
 
-            y -= 0.3 * inch
-            p.line(1 * inch, y, width - inch, y)
+            # Análisis IA (si existe)
+            if r.analisis_ia:
+                if y < 1 * inch:
+                    p.showPage()
+                    y = height - inch
+                p.setFont("Helvetica-Oblique", 10)
+                p.drawString(left_margin, y, "Análisis IA:")
+                y -= 0.2 * inch
+
+                # Convertir a dict si viene como string
+                analisis_dict = r.analisis_ia if isinstance(r.analisis_ia, dict) else json.loads(r.analisis_ia)
+                riesgo = analisis_dict.get("riesgo", "Desconocido")
+                explicacion = analisis_dict.get("explicacion", "")
+                color = analisis_dict.get("color", "")
+
+                # Dibujar riesgo y color
+                if y < 1 * inch:
+                    p.showPage()
+                    y = height - inch
+                p.setFont("Helvetica", 10)
+                p.drawString(left_margin + 0.2 * inch, y, f"Riesgo: {riesgo}")
+                y -= 0.18 * inch
+                if color:
+                    p.drawString(left_margin + 0.2 * inch, y, f"Color: {color}")
+                    y -= 0.18 * inch
+
+                # Explicación (wrap texto largo)
+                for linea in wrap(explicacion, width=90):
+                    if y < 1 * inch:
+                        p.showPage()
+                        y = height - inch
+                        p.setFont("Helvetica", 10)
+                    p.drawString(left_margin + 0.2 * inch, y, linea)
+                    y -= 0.18 * inch
+
+            # Línea divisoria entre módulos
+            y -= 0.25 * inch
+            p.line(left_margin, y, right_margin, y)
             y -= 0.4 * inch
 
         # Finalizar PDF
@@ -232,10 +280,10 @@ def scan_report_view(request, escaneo_id):
         response = HttpResponse(buffer, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
     except Exception as e:
         messages.error(request, f'Error al generar el informe: {e}')
-        return redirect('index_view')
-    
+        return redirect('index_view')  
 
 def escaneo_status_view(request, escaneo_id):
     escaneo = Escaneo.objects.get(id=escaneo_id, user=request.user)
