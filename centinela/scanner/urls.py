@@ -1,6 +1,6 @@
 # Router y URLs para la API REST de resultados de módulos
 from rest_framework import routers
-from .api_views import ResultadoModuloViewSet
+from .api_views import EscaneoViewSet, ResultadoModuloViewSet, UserViewSet
 
 from django.urls import path
 from django.contrib.auth import views as auth_views
@@ -9,7 +9,10 @@ from . import views
 router = routers.DefaultRouter()
 
 # Registrar el ViewSet con el router
+# estos son para CRUDs
 router.register(r'resultadosmodulos', ResultadoModuloViewSet, basename='resultadosModulos')
+router.register(r'escaneos', EscaneoViewSet, basename='escaneos')
+router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
     # Tus patrones de URL van aquí

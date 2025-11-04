@@ -6,19 +6,21 @@
 {% endblock %}
 
 {% block header_links %}
-    {% with link_class="fs-5 text-white text-decoration-none" %}
-    <a href="{% url 'index_view' %}" class="{{ link_class }}">Escanear</a>
+    {% with link_class="fs-5 text-white text-decoration-none nav-link fw-bold" %}
+    <a href="{% url 'index_view' %}" class="{{ link_class }}">
+        <i class="bi bi-search"></i>
+        Escanear</a>
     {% endwith %}
 {% endblock %}
 
 {% block user_actions %}
-    <a href="{% url 'auth_view' %}?form=login" class="text-white text-decoration-none me-2" 
+    <a href="{% url 'auth_view' %}?form=login" class="text-white text-decoration-none me-2 fw-bold" 
        style="transition: color 0.2s;"
        onmouseover="this.style.color='#0d6efd'" 
        onmouseout="this.style.color='white'">
         Iniciar Sesión
     </a>
-    <a href="{% url 'auth_view' %}?form=register" class="btn btn-primary">
+    <a href="{% url 'auth_view' %}?form=register" class="btn btn-primary btn-md fw-bold">
         Registrarse
     </a>
 {% endblock %}

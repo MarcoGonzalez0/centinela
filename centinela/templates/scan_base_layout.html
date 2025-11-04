@@ -24,6 +24,18 @@
 <!-- manejo botones explicaciones breves -->
 <script src="{% static 'js/manejoBtnExp.js' %}"></script>
 
+<!-- Estilos opcionales para animación -->
+<style>
+.icon-visit {
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.icon-visit:hover {
+  color: #0d6efd; /* Azul Bootstrap */
+  transform: translateY(-2px);
+}
+</style>
+
 {% endblock %}
 
 
@@ -38,15 +50,25 @@
     <div class="col-12 col-md-6 d-flex align-items-start gap-3 text-light">
       <div class="flex-grow-1">
         <span class="fw-semibold text-white d-block fs-5 mb-1">Escaneo #{{ escaneo.id }}</span>
-        <span class="text-white fw-semibold d-block fs-6">
-          Objetivo: <span class="fw-semibold fs-5 text-success">{{ escaneo.objetivo }}</span>
+        <span class="text-white fw-semibold d-block fs-5">
+          Objetivo: <span class="fw-bold fs-5 text-success">{{ escaneo.objetivo }}</span>
+          <a href="https://{{ escaneo.objetivo }}" rel="noopener noreferrer" target="_blank">
+            <i class="bi bi-box-arrow-in-up-right text-white text-decoration-none fs-4 icon-visit"
+                 style="font-size: 1.2rem;"
+                 data-bs-toggle="tooltip"
+                 data-bs-placement="top"
+                 title="Visitar sitio escaneado"
+                 ></i>
+        </a>
         </span>
+        
+        
       </div>
     </div>
 
     <!-- Estado del escaneo -->
     <div class="col-6 col-md-3 text-md-end text-light">
-      <span class="fw-semibold d-block text-white fs-6">Estado</span>
+      <span class="fw-semibold d-block text-white fs-5">Estado</span>
       <span id="escaneo-estado" class="fw-semibold fs-5
         {% if escaneo.estado == 'completado' %}text-success
         {% elif escaneo.estado == 'en_proceso' %}text-warning
@@ -57,7 +79,7 @@
 
     <!-- Botón de acción -->
     <div class="col-6 col-md-3 text-md-end" id="btn-informe">
-      <a href="{% url 'scan_report_view' escaneo.id %}" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fs-6">
+      <a href="{% url 'scan_report_view' escaneo.id %}" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fs-6 fw-bold">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
           <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
           <path d="M7.646 10.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 1 0-.708-.708L8.5 9.293V1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3z"/>

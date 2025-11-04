@@ -332,3 +332,4 @@ def analizar_modulo_ia(request):
             "riesgo": "Error",
             "color": "#dc3545"
         }, status=500)
+

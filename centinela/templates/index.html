@@ -1,6 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_head %}
+<style>
+/* Estilos personalizados para tooltips */
+.tooltip-inner {
+  background-color: #212529; /* Fondo oscuro */
+  color: #f8f9fa;           /* Texto claro */
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+  padding: 8px 12px;
+}
+.bs-tooltip-end .tooltip-arrow::before {
+  border-right-color: #212529 !important;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <!-- Menu de busqueda y muestra de resultados a través de gráficos -->
@@ -8,7 +25,15 @@
 
   <!-- Logo -->
   <div class="d-flex justify-content-center rounded shadow bg-transparent mb-4">
-    <img src="{% static 'img/nombre_logo.png' %}" alt="Logo" class="img-fluid" style="max-width: 400px; max-height: auto;">
+    <img 
+      src="{% static 'img/nombre_logo.png' %}" 
+      alt="Logo" 
+      class="img-fluid" 
+      style="max-width: 400px; max-height: auto;"
+      data-bs-toggle="tooltip"
+      data-bs-placement="right"
+      title="Centinela - Escaneo de vulnerabilidades en sitios web"      
+      >
   </div>
 
   <!-- Formulario -->
@@ -130,5 +155,11 @@
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
   })
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  //   [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+  // });
+
 </script>
 {% endblock %}
