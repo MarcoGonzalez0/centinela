@@ -333,3 +333,8 @@ def analizar_modulo_ia(request):
             "color": "#dc3545"
         }, status=500)
 
+def mi_perfil_view(request):
+    # Verificar autenticación
+    if not request.user.is_authenticated:
+        return redirect('auth_view')
+    return render(request, 'mi_perfil.html')

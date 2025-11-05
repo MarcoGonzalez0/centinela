@@ -55,15 +55,15 @@ class UserViewSet(viewsets.ModelViewSet):
         URL: /users/me/
         Método: GET
         """
-        user = request.user
+        user = request.user # Objeto Python User autenticado
                
         if request.method == 'PATCH':
-            serializer=self.get_serializer(user, data=request.data, partial=True)
+            serializer=self.get_serializer(user, data=request.data, partial=True) # Los datos JSON que vienen en el request se convierten a objeto Python
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
         
-        serializer = self.get_serializer(user)
+        serializer = self.get_serializer(user) # Convierte el objeto User a JSON usando el serializador
         return Response(serializer.data)
 
 # ViewSet para Escaneo

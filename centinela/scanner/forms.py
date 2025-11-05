@@ -71,19 +71,3 @@ class ScanForm(forms.Form):
 
     )
 
-#------------------Formulario para perfil de usuario------------------
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'date_joined']
-        read_only_fields = ['id', 'date_joined']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'date_joined': forms.DateInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
-        }
-        labels = {
-            'username': 'Nombre de usuario',
-            'email': 'Correo electrónico',
-            'date_joined': 'Fecha de registro',
-        }

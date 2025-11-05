@@ -3,11 +3,355 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1>Mi Perfil</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Actualizar</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <!-- Card del Perfil -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-circle me-2"></i>Mi Perfil
+                    </h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    
+                    <!-- Alerta de mensajes -->
+                    <div id="alertBox" class="alert alert-dismissible fade d-none" role="alert">
+                        <span id="alertMessage"></span>
+                        <button type="button" class="btn-close" onclick="closeAlert()"></button>
+                    </div>
+
+                    <!-- Spinner de carga -->
+                    <div id="loadingSpinner" class="text-center py-5">
+                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Cargando datos...</p>
+                    </div>
+
+                    <!-- Formulario (oculto inicialmente) -->
+                    <form id="profileForm" style="display: none;">
+                        
+                        <!-- ID (solo lectura) -->
+                        <div class="mb-4">
+                            <label for="id" class="form-label fw-bold">
+                                <i class="bi bi-hash text-muted me-1"></i>ID de Usuario
+                            </label>
+                            <input 
+                                type="text" 
+                                id="id" 
+                                class="form-control bg-light" 
+                                readonly 
+                                disabled>
+                        </div>
+
+                        <!-- Username -->
+                        <div class="mb-4">
+                            <label for="username" class="form-label fw-bold">
+                                <i class="bi bi-person text-primary me-1"></i>Nombre de Usuario
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                class="form-control form-control-lg" 
+                                required>
+                            <div class="invalid-feedback" id="usernameError"></div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-4">
+                            <label for="email" class="form-label fw-bold">
+                                <i class="bi bi-envelope text-primary me-1"></i>Correo Electrónico
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                class="form-control form-control-lg" 
+                                required>
+                            <div class="invalid-feedback" id="emailError"></div>
+                        </div>
+
+                        <!-- Fecha de registro (solo lectura) -->
+                        <div class="mb-4">
+                            <label for="date_joined" class="form-label fw-bold">
+                                <i class="bi bi-calendar-check text-muted me-1"></i>Miembro Desde
+                            </label>
+                            <input 
+                                type="text" 
+                                id="date_joined" 
+                                class="form-control bg-light" 
+                                readonly 
+                                disabled>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Botones de acción -->
+                        <div class="d-grid gap-3">
+                            <button 
+                                type="submit" 
+                                id="submitBtn"
+                                class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                            </button>
+
+                            <a href="#" class="btn btn-warning btn-lg">
+                                <i class="bi bi-key me-2"></i>Cambiar Contraseña
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="text-center mt-4 text-muted small">
+                <i class="bi bi-shield-check me-1"></i>
+                Tus datos están protegidos y seguros
+            </div>
+
+        </div>
+    </div>
 </div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">
+                    <i class="bi bi-question-circle text-warning me-2"></i>Confirmar Actualización
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Estás seguro de que deseas actualizar tu perfil?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>No
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmBtn">
+                    <i class="bi bi-check-circle me-1"></i>Sí, Actualizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+    
+    .form-control-lg {
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    .invalid-feedback {
+        display: block;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<script>
+// Variables globales
+let confirmModal;
+let originalData = {};
+
+// Inicializar cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar modal de Bootstrap
+    confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    
+    // Cargar perfil del usuario
+    loadProfile();
+    
+    // Evento del formulario
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Mostrar modal de confirmación
+        confirmModal.show();
+    });
+    
+    // Botón de confirmación en el modal
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+        confirmModal.hide();
+        updateProfile();
+    });
+});
+
+// Cargar datos del perfil
+async function loadProfile() {
+    const spinner = document.getElementById('loadingSpinner');
+    const form = document.getElementById('profileForm');
+    
+    try {
+        const response = await fetch('/users/me/');
+        
+        if (response.ok) {
+            const data = await response.json();
+            originalData = data; // Guardar datos originales
+            
+            // Llenar el formulario
+            document.getElementById('id').value = data.id;
+            document.getElementById('username').value = data.username;
+            document.getElementById('email').value = data.email;
+            document.getElementById('date_joined').value = formatDate(data.date_joined);
+            
+            // Mostrar formulario y ocultar spinner
+            spinner.style.display = 'none';
+            form.style.display = 'block';
+        } else {
+            showAlert('danger', 'Error al cargar el perfil. Por favor, recarga la página.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Error de conexión. Verifica tu conexión a internet.');
+    }
+}
+
+// Actualizar perfil
+async function updateProfile() {
+    const submitBtn = document.getElementById('submitBtn');
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    
+    // Limpiar errores previos
+    clearErrors();
+    
+    // Deshabilitar botón mientras se procesa
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+    
+    try {
+        const response = await fetch('/users/me/', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            // Éxito
+            originalData = result.data || result;
+            showAlert('success', '✓ Perfil actualizado correctamente');
+            
+            // Actualizar campos con los nuevos datos
+            document.getElementById('username').value = originalData.username;
+            document.getElementById('email').value = originalData.email;
+            
+            // Scroll hacia arriba para ver la alerta
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            // Errores de validación
+            if (result.username) {
+                showFieldError('username', result.username[0]);
+            }
+            if (result.email) {
+                showFieldError('email', result.email[0]);
+            }
+            showAlert('danger', '⚠ Por favor corrige los errores en el formulario');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', '⚠ Error al actualizar el perfil. Inténtalo de nuevo.');
+    } finally {
+        // Rehabilitar botón
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Guardar Cambios';
+    }
+}
+
+// Mostrar error en un campo específico
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorDiv = document.getElementById(fieldId + 'Error');
+    
+    field.classList.add('is-invalid');
+    errorDiv.textContent = message;
+}
+
+// Limpiar todos los errores
+function clearErrors() {
+    document.getElementById('username').classList.remove('is-invalid');
+    document.getElementById('email').classList.remove('is-invalid');
+    document.getElementById('usernameError').textContent = '';
+    document.getElementById('emailError').textContent = '';
+}
+
+// Mostrar alerta
+function showAlert(type, message) {
+    const alertBox = document.getElementById('alertBox');
+    const alertMessage = document.getElementById('alertMessage');
+    
+    alertBox.className = `alert alert-${type} alert-dismissible fade show`;
+    alertMessage.textContent = message;
+    alertBox.classList.remove('d-none');
+    
+    // Auto-ocultar después de 5 segundos
+    setTimeout(() => {
+        closeAlert();
+    }, 5000);
+}
+
+// Cerrar alerta
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.classList.add('d-none');
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Obtener cookie CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
 {% endblock %}
