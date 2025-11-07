@@ -338,3 +338,14 @@ def mi_perfil_view(request):
     if not request.user.is_authenticated:
         return redirect('auth_view')
     return render(request, 'mi_perfil.html')
+
+def mis_escaneos_view(request):
+    """
+    Vista para mostrar los escaneos del usuario.
+    Los datos se cargan dinámicamente desde la API con paginación.
+    """
+    # Verificar autenticación
+    if not request.user.is_authenticated:
+        return redirect('auth_view')
+
+    return render(request, 'mis_escaneos.html')

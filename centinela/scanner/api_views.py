@@ -3,6 +3,7 @@ from rest_framework import viewsets, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 
 # Modelos
 from .models import resultadoModulo, Escaneo, User
@@ -51,20 +52,30 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get', 'patch'], url_path='me', serializer_class=UserProfileSerializer)
     def me(self, request, *args, **kwargs):
         """
-        Acción personalizada para obtener los detalles del usuario autenticado.
-        URL: /users/me/
-        Método: GET
+        Acción personalizada para obtener o actualizar el perfil del usuario autenticado.
+        URL: /api/users/me/
+        Métodos: GET (obtener), PATCH (actualizar parcialmente)
         """
-        user = request.user # Objeto Python User autenticado
+        user = request.user # Objeto Python: <User: juan>
                
         if request.method == 'PATCH':
-            serializer=self.get_serializer(user, data=request.data, partial=True) # Los datos JSON que vienen en el request se convierten a objeto Python
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+            # DESERIALIZACIÓN: Validar y preparar datos para actualizar
+            # request.data es un diccionario Python con los datos enviados
+            # Ejemplo: {'username': 'juan2', 'email': 'nuevo@email.com'}
+            serializer=self.get_serializer(user, data=request.data, partial=True) 
+
+            serializer.is_valid(raise_exception=True) # Valida los datos según las reglas del modelo y serializer
+            serializer.save() # Internamente ejecuta: UPDATE users SET ... WHERE id = user.id | Guarda los cambios en la BD
+
+            # SERIALIZACIÓN: Convierte el objeto User actualizado a diccionario Python
+            # serializer.data = {'id': 1, 'username': 'juan2', 'email': 'nuevo@email.com', ...}
+            # DRF lo convierte a JSON antes de enviarlo al cliente
             return Response(serializer.data)
         
-        serializer = self.get_serializer(user) # Convierte el objeto User a JSON usando el serializador
-        return Response(serializer.data)
+        # Método GET: Solo lectura
+        # SERIALIZACIÓN: Convierte el objeto User a diccionario Python
+        serializer = self.get_serializer(user) 
+        return Response(serializer.data) # serializer.data es un dict con los datos del usuario
 
 # ViewSet para Escaneo
 # Serializador
@@ -73,20 +84,38 @@ class EscaneoSerializer(serializers.ModelSerializer):
         model = Escaneo
         fields = ['id', 'user', 'objetivo', 'tipo_objetivo', 'fecha_inicio', 'fecha_fin', 'estado']
 
+# Clase de paginación personalizada
+class EscaneoPagination(PageNumberPagination):
+    page_size = 10  # 10 escaneos por página
+    page_size_query_param = 'page_size' # permite al cliente definir el tamaño de página
+    max_page_size = 50 # máximo 50 escaneos por página
+
 # ViewSet para Escaneo
 class EscaneoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = EscaneoSerializer
+    pagination_class = EscaneoPagination
     """
     Este ViewSet permite a los usuarios autenticados ver sus escaneos.
     Los administradores pueden ver todos los escaneos, mientras que los usuarios normales solo pueden ver los suyos.
     """
 
     def get_queryset(self):
-        qs = Escaneo.objects.all()
+        qs = Escaneo.objects.all() # QuerySet inicial con todos los escaneos
 
         if not self.request.user.is_staff:  # si no es admin
-            qs = qs.filter(user=self.request.user)
+            qs = qs.filter(user=self.request.user) # se filtran solo los escaneos del usuario autenticado
+
+        # Filtros opcionales por parámetros de consulta
+        # por estado (completado, en_proceso, pendiente, error)
+        estado = self.request.query_params.get('estado') # filtrar por estado si se proporciona
+        if estado:
+            qs = qs.filter(estado=estado)
+
+        # por objetivo (hola.cl, ejemplo.com)
+        objetivo = self.request.query_params.get('objetivo') # filtrar por objetivo si se proporciona
+        if objetivo:
+            qs = qs.filter(objetivo__icontains=objetivo)
 
         return qs
 

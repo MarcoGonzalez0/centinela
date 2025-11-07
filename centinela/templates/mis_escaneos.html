@@ -1,0 +1,503 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center bg-primary text-white p-4 rounded shadow-sm">
+                <h2 class="mb-0">
+                    <i class="bi bi-radar text-white"></i> Mis Escaneos
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Búsqueda -->
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="searchInput"
+                                    placeholder="Buscar por objetivo..."
+                                    onkeyup="handleSearch()">
+                            </div>
+                        </div>
+                        
+                        <!-- Filtro por estado -->
+                        <div class="col-md-4">
+                            <select class="form-select" id="estadoFilter" onchange="loadEscaneos()">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="en_proceso">En Proceso</option>
+                                <option value="completado">Completado</option>
+                                <option value="error">Error</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Botón refrescar -->
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-secondary w-100" onclick="loadEscaneos()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats rápidas -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0 opacity-75">Total de Escaneos</h6>
+                            <h2 class="mb-0 mt-2" id="totalEscaneos">-</h2>
+                        </div>
+                        <i class="bi bi-clipboard-data fs-1 opacity-30"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerta -->
+    <div id="alertBox" class="alert alert-dismissible fade d-none mb-4" role="alert">
+        <span id="alertMessage"></span>
+        <button type="button" class="btn-close" onclick="closeAlert()"></button>
+    </div>
+
+    <!-- Spinner de carga inicial -->
+    <div id="loadingSpinner" class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-muted">Cargando escaneos...</p>
+    </div>
+
+    <!-- Lista de Escaneos (Accordion) -->
+    <div id="escaneosList" style="display: none;">
+        <div class="accordion" id="escaneoAccordion"></div>
+        
+        <!-- Paginación -->
+        <nav aria-label="Paginación" class="mt-4">
+            <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
+    </div>
+
+    <!-- Estado vacío -->
+    <div id="emptyState" style="display: none;">
+        <div class="text-center py-5">
+            <i class="bi bi-inbox fs-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">No hay escaneos disponibles</h4>
+            
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .accordion-button:not(.collapsed) {
+        background-color: #e7f1ff;
+        color: #0d6efd;
+    }
+    
+    .badge-estado {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .modulo-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+    
+    .modulo-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .skeleton {
+        animation: skeleton-loading 1s linear infinite alternate;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+    }
+    
+    @keyframes skeleton-loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+</style>
+
+<script>
+// Variables globales
+let currentPage = 1;
+let totalPages = 1;
+let searchTimeout;
+
+// Cargar escaneos al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    loadEscaneos();
+});
+
+// Búsqueda con debounce
+function handleSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        currentPage = 1;
+        loadEscaneos();
+    }, 500);
+}
+
+// Cargar escaneos desde la API
+async function loadEscaneos(page = 1) {
+    const spinner = document.getElementById('loadingSpinner');
+    const list = document.getElementById('escaneosList');
+    const empty = document.getElementById('emptyState');
+
+    // Actualizar pagina actual
+    currentPage = page;
+    
+    // Mostrar spinner
+    spinner.style.display = 'block';
+    list.style.display = 'none';
+    empty.style.display = 'none';
+    
+    // Construir URL con filtros
+    const estado = document.getElementById('estadoFilter').value;
+    const objetivo = document.getElementById('searchInput').value;
+    
+    let url = `/escaneos/?page=${page}`;
+    if (estado) url += `&estado=${estado}`;
+    if (objetivo) url += `&objetivo=${objetivo}`;
+    
+    try {
+        const response = await fetch(url);
+        
+        if (response.ok) {
+            const data = await response.json();
+            
+            // Actualizar total
+            document.getElementById('totalEscaneos').textContent = data.count || 0;
+            
+            if (data.results && data.results.length > 0) {
+                renderEscaneos(data.results);
+                renderPagination(data);
+                list.style.display = 'block';
+            } else {
+                empty.style.display = 'block';
+            }
+        } else {
+            showAlert('danger', 'Error al cargar los escaneos');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Error de conexión');
+    } finally {
+        spinner.style.display = 'none';
+    }
+}
+
+// Funcion para descargar informe
+function descargarInforme(escaneoId) {
+    // Redirigir a la vista de descarga
+    window.location.href = `/scan_report/${escaneoId}/`;
+}
+
+// Renderizar lista de escaneos
+function renderEscaneos(escaneos) {
+    const accordion = document.getElementById('escaneoAccordion');
+    accordion.innerHTML = '';
+    
+    escaneos.forEach((escaneo, index) => {
+        const item = document.createElement('div');
+        item.className = 'accordion-item mb-3 border-0 shadow-sm';
+        item.innerHTML = `
+            <h2 class="accordion-header">
+                <button 
+                    class="accordion-button collapsed" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapse${escaneo.id}">
+                    <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-bullseye fs-4 text-primary me-3"></i>
+                            <div>
+                                <strong>${escaneo.objetivo}</strong>
+                                <small class="d-block text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    ${formatDate(escaneo.fecha_inicio)}
+                                </small>
+                            </div>
+                        </div>
+                        <div>
+                            ${getEstadoBadge(escaneo.estado)}
+                            <span class="badge bg-secondary ms-2">
+                                <i class="bi bi-hdd me-1"></i>${escaneo.tipo_objetivo}
+                            </span>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div 
+                id="collapse${escaneo.id}" 
+                class="accordion-collapse collapse bg-info" 
+                data-bs-parent="#escaneoAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>ID:</strong> #${escaneo.id}</p>
+                            <p class="mb-1"><strong>Objetivo:</strong> ${escaneo.objetivo}</p>
+                            <p class="mb-1"><strong>Tipo:</strong> ${escaneo.tipo_objetivo}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Inicio:</strong> ${formatDate(escaneo.fecha_inicio)}</p>
+                            <p class="mb-1"><strong>Fin:</strong> ${formatDate(escaneo.fecha_fin)}</p>
+                            <p class="mb-1"><strong>Estado:</strong> ${getEstadoBadge(escaneo.estado)}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3">
+                        <i class="bi bi-puzzle me-2"></i>Módulos Ejecutados
+                        <button onclick="descargarInforme(${escaneo.id})" class="btn btn-primary fw-bold float-end">
+                            <i class="bi bi-download me-1"></i>
+                            Descargar Informe
+                        </button>
+                    </h5>
+                    <div id="modulos-${escaneo.id}" class="row g-3">
+                        <div class="col-12 text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary"></div>
+                            <small class="d-block mt-2 text-muted">Cargando módulos...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        accordion.appendChild(item);
+        
+        // Cargar módulos cuando se expande
+        const collapseEl = item.querySelector(`#collapse${escaneo.id}`);
+        collapseEl.addEventListener('shown.bs.collapse', function() {
+            loadModulos(escaneo.id);
+        });
+    });
+}
+
+// Cargar módulos de un escaneo (lazy loading)
+async function loadModulos(escaneoId) {
+    const container = document.getElementById(`modulos-${escaneoId}`);
+    
+    // Si ya se cargaron, no volver a cargar
+    if (container.dataset.loaded === 'true') return;
+    
+    try {
+        const response = await fetch(`/resultadosmodulos/?escaneo_id=${escaneoId}`);
+        
+        if (response.ok) {
+            const modulos = await response.json();
+            
+            if (modulos.length > 0) {
+                container.innerHTML = '';
+                modulos.forEach(modulo => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4';
+                    col.innerHTML = `
+                        <div class="card modulo-card h-100 bg-light" onclick="verDetalleModulo(${modulo.id})">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-gear-fill text-primary me-2"></i>
+                                        ${modulo.nombre_modulo}
+                                    </h6>
+                                    ${getEstadoBadge(modulo.estado, true)}
+                                </div>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>
+                                    ${formatDate(modulo.fecha_ejecucion)}
+                                </small>
+                                ${modulo.analisis_ia ? '<div class="mt-2"><span class="badge bg-success"><i class="bi bi-robot me-1"></i>Con análisis IA</span></div>' : ''}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(col);
+                });
+            } else {
+                container.innerHTML = '<div class="col-12 text-center text-muted py-3">No hay módulos ejecutados</div>';
+            }
+            
+            container.dataset.loaded = 'true';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        container.innerHTML = '<div class="col-12 text-center text-danger py-3">Error al cargar módulos</div>';
+    }
+}
+
+// Ver detalle de un módulo (puedes implementar un modal)
+function verDetalleModulo(moduloId) {
+    // TODO: Abrir modal con detalles del módulo
+    console.log('Ver módulo:', moduloId);
+    showAlert('info', 'Funcionalidad en desarrollo');
+}
+
+// Renderizar paginación
+function renderPagination(data) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+    
+    // Si no hay paginación, no mostrar nada
+    if (!data.next && !data.previous) {
+        pagination.style.display = 'none';
+        return;
+    }
+    
+    pagination.style.display = 'flex';
+    
+    // Calcular total de páginas
+    const totalPages = Math.ceil(data.count / 10);
+    
+    // Botón anterior
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${!data.previous ? 'disabled' : ''}`;
+    prevLi.innerHTML = `
+        <a class="page-link" href="#" ${data.previous ? `onclick="loadEscaneos(${currentPage - 1}); return false;"` : 'onclick="return false;"'}>
+            <i class="bi bi-chevron-left"></i>
+        </a>
+    `;
+    pagination.appendChild(prevLi);
+    
+    // Números de página
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, parseInt(currentPage) + 2);
+    
+    // Si no estamos en la primera página, mostrar "1 ..."
+    if (startPage > 1) {
+        const firstLi = document.createElement('li');
+        firstLi.className = 'page-item';
+        firstLi.innerHTML = `
+            <a class="page-link" href="#" onclick="loadEscaneos(1); return false;">1</a>
+        `;
+        pagination.appendChild(firstLi);
+        
+        if (startPage > 2) {
+            const dotsLi = document.createElement('li');
+            dotsLi.className = 'page-item disabled';
+            dotsLi.innerHTML = `<a class="page-link" href="#">...</a>`;
+            pagination.appendChild(dotsLi);
+        }
+    }
+    
+    // Páginas del rango
+    for (let i = startPage; i <= endPage; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i == currentPage ? 'active' : ''}`;
+        li.innerHTML = `
+            <a class="page-link" href="#" onclick="loadEscaneos(${i}); return false;">
+                ${i}
+            </a>
+        `;
+        pagination.appendChild(li);
+    }
+    
+    // Si no estamos en la última página, mostrar "... N"
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const dotsLi = document.createElement('li');
+            dotsLi.className = 'page-item disabled';
+            dotsLi.innerHTML = `<a class="page-link" href="#">...</a>`;
+            pagination.appendChild(dotsLi);
+        }
+        
+        const lastLi = document.createElement('li');
+        lastLi.className = 'page-item';
+        lastLi.innerHTML = `
+            <a class="page-link" href="#" onclick="loadEscaneos(${totalPages}); return false;">
+                ${totalPages}
+            </a>
+        `;
+        pagination.appendChild(lastLi);
+    }
+    
+    // Botón siguiente
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${!data.next ? 'disabled' : ''}`;
+    nextLi.innerHTML = `
+        <a class="page-link" href="#" ${data.next ? `onclick="loadEscaneos(${currentPage + 1}); return false;"` : 'onclick="return false;"'}>
+            <i class="bi bi-chevron-right"></i>
+        </a>
+    `;
+    pagination.appendChild(nextLi);
+}
+
+// Obtener badge según estado
+function getEstadoBadge(estado, small = false) {
+    const badges = {
+        'pendiente': { color: 'warning', icon: 'hourglass-split', text: 'Pendiente' },
+        'en_proceso': { color: 'info', icon: 'arrow-repeat', text: 'En Proceso' },
+        'completado': { color: 'success', icon: 'check-circle', text: 'Completado' },
+        'error': { color: 'danger', icon: 'x-circle', text: 'Error' }
+    };
+    
+    const badge = badges[estado] || badges['pendiente'];
+    const sizeClass = small ? '' : 'badge-estado';
+    
+    return `
+        <span class="badge bg-${badge.color} ${sizeClass}">
+            <i class="bi bi-${badge.icon} me-1"></i>${badge.text}
+        </span>
+    `;
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleString('es-ES', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Mostrar alerta
+function showAlert(type, message) {
+    const alertBox = document.getElementById('alertBox');
+    const alertMessage = document.getElementById('alertMessage');
+
+    // ✅ Validar que existen los elementos
+    if (!alertBox || !alertMessage) {
+        console.error('Elementos de alerta no encontrados');
+        console.log(message); // Mostrar mensaje en consola como fallback
+        return;
+    }
+    
+    alertBox.className = `alert alert-${type} alert-dismissible fade show mb-4`;
+    alertMessage.textContent = message;
+    
+    setTimeout(() => closeAlert(), 5000);
+}
+
+// Cerrar alerta
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.classList.add('d-none');
+}
+</script>
+{% endblock %}

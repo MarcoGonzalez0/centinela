@@ -28,6 +28,7 @@ urlpatterns = [
     path("escaneo/<int:escaneo_id>/status/", views.escaneo_status_view, name="escaneo_status_view"),  # Vista para obtener el estado de un escaneo específico
     path("analizar-modulo/", views.analizar_modulo_ia, name="analizar_modulo_ia"),  # Vista para análisis de módulo con IA
     path("mi-perfil/", views.mi_perfil_view, name="mi_perfil_view"),  # Vista para 'mi perfil'
+    path("mis-escaneos/", views.mis_escaneos_view, name="mis_escaneos_view"),  # Vista para 'mis escaneos'
 
     # Las siguientes vistas son para configurar mas adelante
     # Vistas para recuperación de contraseña
