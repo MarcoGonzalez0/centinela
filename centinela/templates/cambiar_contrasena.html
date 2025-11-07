@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            
+            <!-- Card -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h3 class="mb-0">
+                        <i class="bi bi-key-fill me-2"></i>Cambiar Contraseña
+                    </h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    
+                    <!-- Mensajes de error general -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+
+                    <!-- Información de ayuda -->
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Requisitos de seguridad:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Mínimo 8 caracteres</li>
+                            <li>No puede ser completamente numérica</li>
+                            <li>No puede ser demasiado común</li>
+                            <li>No puede ser muy similar a tu información personal</li>
+                        </ul>
+                    </div>
+
+                    <!-- Formulario -->
+                    <form method="post" id="passwordForm">
+                        {% csrf_token %}
+                        
+                        <!-- Contraseña actual -->
+                        <div class="mb-4">
+                            <label for="{{ form.old_password.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-lock text-muted me-1"></i>Contraseña Actual
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-shield-lock"></i>
+                                </span>
+                                <input 
+                                    type="password" 
+                                    name="old_password" 
+                                    class="form-control form-control-lg {% if form.old_password.errors %}is-invalid{% endif %}"
+                                    id="{{ form.old_password.id_for_label }}"
+                                    required
+                                    autocomplete="current-password">
+                                <button 
+                                    class="btn btn-outline-secondary" 
+                                    type="button"
+                                    onclick="togglePassword('{{ form.old_password.id_for_label }}', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.old_password.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.old_password.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Nueva contraseña -->
+                        <div class="mb-4">
+                            <label for="{{ form.new_password1.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-key text-warning me-1"></i>Nueva Contraseña
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-shield-plus"></i>
+                                </span>
+                                <input 
+                                    type="password" 
+                                    name="new_password1" 
+                                    class="form-control form-control-lg {% if form.new_password1.errors %}is-invalid{% endif %}"
+                                    id="{{ form.new_password1.id_for_label }}"
+                                    required
+                                    autocomplete="new-password">
+                                <button 
+                                    class="btn btn-outline-secondary" 
+                                    type="button"
+                                    onclick="togglePassword('{{ form.new_password1.id_for_label }}', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.new_password1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.new_password1.errors %}
+                                        {{ error }}<br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <!-- Indicador de fortaleza -->
+                            <div class="mt-2">
+                                <div class="progress" style="height: 5px;">
+                                    <div id="strengthBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small id="strengthText" class="text-muted"></small>
+                            </div>
+                        </div>
+
+                        <!-- Confirmar nueva contraseña -->
+                        <div class="mb-4">
+                            <label for="{{ form.new_password2.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-shield-check text-success me-1"></i>Confirmar Nueva Contraseña
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-shield-check"></i>
+                                </span>
+                                <input 
+                                    type="password" 
+                                    name="new_password2" 
+                                    class="form-control form-control-lg {% if form.new_password2.errors %}is-invalid{% endif %}"
+                                    id="{{ form.new_password2.id_for_label }}"
+                                    required
+                                    autocomplete="new-password">
+                                <button 
+                                    class="btn btn-outline-secondary" 
+                                    type="button"
+                                    onclick="togglePassword('{{ form.new_password2.id_for_label }}', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.new_password2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.new_password2.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Botones de acción -->
+                        <div class="d-grid gap-3">
+                            <button 
+                                type="submit" 
+                                class="btn btn-warning btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Cambiar Contraseña
+                            </button>
+                            
+                            <a href="{% url 'mi_perfil_view' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Perfil
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Consejos de seguridad -->
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="bi bi-shield-check text-success me-2"></i>Consejos de seguridad
+                    </h6>
+                    <ul class="small mb-0">
+                        <li>Usa una combinación de letras mayúsculas, minúsculas, números y símbolos</li>
+                        <li>No uses la misma contraseña en diferentes sitios</li>
+                        <li>Cambia tu contraseña regularmente</li>
+                        <li>No compartas tu contraseña con nadie</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .form-control:focus {
+        border-color: #ffc107;
+        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    }
+    
+    .input-group-text {
+        border-right: none;
+    }
+    
+    .input-group .form-control {
+        border-left: none;
+    }
+    
+    .input-group:focus-within .input-group-text {
+        border-color: #ffc107;
+    }
+</style>
+
+<script>
+// Mostrar/Ocultar contraseña
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+
+// Medidor de fortaleza de contraseña
+const newPasswordInput = document.getElementById('{{ form.new_password1.id_for_label }}');
+const strengthBar = document.getElementById('strengthBar');
+const strengthText = document.getElementById('strengthText');
+
+if (newPasswordInput) {
+    newPasswordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        if (password.length >= 8) strength += 25;
+        if (password.length >= 12) strength += 25;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+        if (/[0-9]/.test(password)) strength += 12.5;
+        if (/[^a-zA-Z0-9]/.test(password)) strength += 12.5;
+        
+        strengthBar.style.width = strength + '%';
+        
+        if (strength < 50) {
+            strengthBar.className = 'progress-bar bg-danger';
+            strengthText.textContent = 'Débil';
+            strengthText.className = 'text-danger small';
+        } else if (strength < 75) {
+            strengthBar.className = 'progress-bar bg-warning';
+            strengthText.textContent = 'Media';
+            strengthText.className = 'text-warning small';
+        } else {
+            strengthBar.className = 'progress-bar bg-success';
+            strengthText.textContent = 'Fuerte';
+            strengthText.className = 'text-success small';
+        }
+    });
+}
+
+// Validación de coincidencia de contraseñas
+const confirmPasswordInput = document.getElementById('{{ form.new_password2.id_for_label }}');
+
+if (confirmPasswordInput && newPasswordInput) {
+    confirmPasswordInput.addEventListener('input', function() {
+        if (this.value !== newPasswordInput.value && this.value.length > 0) {
+            this.setCustomValidity('Las contraseñas no coinciden');
+            this.classList.add('is-invalid');
+        } else {
+            this.setCustomValidity('');
+            this.classList.remove('is-invalid');
+        }
+    });
+}
+</script>
+{% endblock %}

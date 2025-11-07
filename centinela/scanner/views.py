@@ -10,8 +10,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.views import LoginView
-from django.urls import reverse
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 
 #reportlabs para PDF
@@ -349,3 +349,12 @@ def mis_escaneos_view(request):
         return redirect('auth_view')
 
     return render(request, 'mis_escaneos.html')
+
+# Creo esta vista personalizada para poder mostrar un mensaje de EEEEEXXIIIITOOOOO
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'cambiar_contrasena.html'
+    success_url = reverse_lazy('mi_perfil_view')
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Contraseña actualizada exitosamente!')
+        return super().form_valid(form)

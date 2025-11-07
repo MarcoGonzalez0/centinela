@@ -2,7 +2,7 @@
 from rest_framework import routers
 from .api_views import EscaneoViewSet, ResultadoModuloViewSet, UserViewSet
 
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -29,6 +29,8 @@ urlpatterns = [
     path("analizar-modulo/", views.analizar_modulo_ia, name="analizar_modulo_ia"),  # Vista para análisis de módulo con IA
     path("mi-perfil/", views.mi_perfil_view, name="mi_perfil_view"),  # Vista para 'mi perfil'
     path("mis-escaneos/", views.mis_escaneos_view, name="mis_escaneos_view"),  # Vista para 'mis escaneos'
+    path("cambiar-contrasena/", views.CustomPasswordChangeView.as_view(), name='cambiar_contrasena_view'),  # Vista para cambiar contraseña
+
 
     # Las siguientes vistas son para configurar mas adelante
     # Vistas para recuperación de contraseña

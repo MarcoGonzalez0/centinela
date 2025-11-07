@@ -98,7 +98,7 @@
                                 <i class="bi bi-check-circle me-2"></i>Guardar Cambios
                             </button>
 
-                            <a href="#" class="btn btn-warning btn-lg">
+                            <a href="{% url 'cambiar_contrasena_view' %}" class="btn btn-warning btn-lg">
                                 <i class="bi bi-key me-2"></i>Cambiar Contraseña
                             </a>
                         </div>
@@ -308,10 +308,11 @@ function clearErrors() {
 function showAlert(type, message) {
     const alertBox = document.getElementById('alertBox');
     const alertMessage = document.getElementById('alertMessage');
+
+    alertBox.classList.remove('d-none');
     
     alertBox.className = `alert alert-${type} alert-dismissible fade show`;
     alertMessage.textContent = message;
-    alertBox.classList.remove('d-none');
     
     // Auto-ocultar después de 5 segundos
     setTimeout(() => {
@@ -322,7 +323,12 @@ function showAlert(type, message) {
 // Cerrar alerta
 function closeAlert() {
     const alertBox = document.getElementById('alertBox');
-    alertBox.classList.add('d-none');
+    alertBox.classList.remove('show');
+    
+    // Esperar a que termine la animación antes de ocultar
+    setTimeout(() => {
+        alertBox.classList.add('d-none');
+    }, 150);
 }
 
 // Formatear fecha
