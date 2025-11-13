@@ -30,26 +30,31 @@ urlpatterns = [
     path("mi-perfil/", views.mi_perfil_view, name="mi_perfil_view"),  # Vista para 'mi perfil'
     path("mis-escaneos/", views.mis_escaneos_view, name="mis_escaneos_view"),  # Vista para 'mis escaneos'
     path("cambiar-contrasena/", views.CustomPasswordChangeView.as_view(), name='cambiar_contrasena_view'),  # Vista para cambiar contraseña
-
-
-    # Las siguientes vistas son para configurar mas adelante
+    
     # Vistas para recuperación de contraseña
     path('password-reset/', auth_views.PasswordResetView.as_view(
-        template_name='password_reset.html'
+        template_name='recuperar_contrasena/password_reset.html'
     ), name='password_reset'),
     
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(
-        template_name='password_reset_done.html'
+        template_name='recuperar_contrasena/password_reset_done.html'
     ), name='password_reset_done'),
     
     path('password-reset-confirm/<uidb64>/<token>/', 
          auth_views.PasswordResetConfirmView.as_view(
-             template_name='password_reset_confirm.html'
+             template_name='recuperar_contrasena/password_reset_confirm.html'
          ), name='password_reset_confirm'),
     
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(
-        template_name='password_reset_complete.html'
+        template_name='recuperar_contrasena/password_reset_complete.html'
     ), name='password_reset_complete'),
+
+    # Vistas Administrador
+    path('panel/dashboard/', views.admin_dashboard_view, name='admin_dashboard'),
+    path('panel/usuarios/', views.admin_usuarios_view, name='admin_usuarios'),
+    path('panel/escaneos/', views.admin_escaneos_view, name='admin_escaneos'),
+    # API para toggle de usuario
+    path('api/admin/usuarios/<int:user_id>/toggle/', views.admin_toggle_user, name='admin_toggle_user'),
 
 ]
 

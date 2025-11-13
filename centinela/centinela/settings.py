@@ -177,6 +177,25 @@ CELERY_TASK_ROUTES = {
     },
 }
 
-
 # Para tareas programadas (opcional - requiere django-celery-beat)
 # CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# Configuración de Email para desarrollo con Mailpit
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'mailpit') 
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 1025))
+    EMAIL_USE_TLS = False
+    EMAIL_USE_SSL = False
+    EMAIL_HOST_USER = ''
+    EMAIL_HOST_PASSWORD = ''
+    DEFAULT_FROM_EMAIL = 'noreply@tuapp.com'
+# else:
+    # Configuración para producción (Gmail, SendGrid, etc.)
+    # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    # EMAIL_HOST = 'smtp.gmail.com'
+    # EMAIL_PORT = 587
+    # EMAIL_USE_TLS = True
+    # EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+    # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+    # DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')

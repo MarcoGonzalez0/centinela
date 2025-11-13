@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 bg-primary text-white p-4 rounded shadow-sm">
+            <h2>
+                <i class="bi bi-speedometer2 text-white"></i> 
+                Dashboard Administrativo
+            </h2>
+            <p class="text-white fw-bold fs-5">Vista general del sistema</p>
+        </div>
+    </div>
+
+    <!-- Tarjetas de estadísticas -->
+    <div class="row g-4 mb-4">
+        
+        <!-- Total Usuarios -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Usuarios</h6>
+                            <h2 class="mb-0">{{ total_usuarios }}</h2>
+                            <small class="text-success">
+                                <i class="bi bi-check-circle"></i> 
+                                {{ usuarios_activos }} activos
+                            </small>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-people fs-2 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Escaneos -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Escaneos</h6>
+                            <h2 class="mb-0">{{ total_escaneos }}</h2>
+                            <small class="text-info">
+                                <i class="bi bi-arrow-up"></i> 
+                                {{ escaneos_recientes }} últimos 7 días
+                            </small>
+                        </div>
+                        <div class="bg-info bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-radar fs-2 text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completados -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Completados</h6>
+                            <h2 class="mb-0">{{ escaneos_completados }}</h2>
+                            <small class="text-success">
+                                {{ escaneos_completados|floatformat:0 }}% del total
+                            </small>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-check-circle fs-2 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Con Error -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Con Error</h6>
+                            <h2 class="mb-0">{{ escaneos_error }}</h2>
+                            <small class="text-danger">
+                                Requieren atención
+                            </small>
+                        </div>
+                        <div class="bg-danger bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-exclamation-triangle fs-2 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Gráficos y tablas -->
+    <div class="row g-4">
+        
+        <!-- Top Usuarios -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0">
+                        <i class="bi bi-trophy text-warning"></i> 
+                        Top 5 Usuarios
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th class="text-end">Escaneos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in top_usuarios %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <i class="bi bi-person-circle text-primary me-2"></i>
+                                        {{ usuario.username }}
+                                    </td>
+                                    <td>{{ usuario.email }}</td>
+                                    <td class="text-end">
+                                        <span class="badge bg-primary">{{ usuario.num_escaneos }}</span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        No hay datos disponibles
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimos Escaneos -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history text-info"></i> 
+                        Últimos Escaneos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Objetivo</th>
+                                    <th>Usuario</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for escaneo in ultimos_escaneos %}
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-bullseye text-primary me-2"></i>
+                                        {{ escaneo.objetivo }}
+                                    </td>
+                                    <td>{{ escaneo.user.username }}</td>
+                                    <td>
+                                        {% if escaneo.estado == 'completado' %}
+                                            <span class="badge bg-success">Completado</span>
+                                        {% elif escaneo.estado == 'en_proceso' %}
+                                            <span class="badge bg-info">En Proceso</span>
+                                        {% elif escaneo.estado == 'pendiente' %}
+                                            <span class="badge bg-warning">Pendiente</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Error</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ escaneo.fecha_inicio|date:"d/m/Y H:i" }}
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        No hay escaneos recientes
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

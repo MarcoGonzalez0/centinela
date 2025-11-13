@@ -2,7 +2,7 @@
 import io
 from time import sleep, timezone
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from textwrap import dedent, wrap # Para que explicacion IA no se corta a la mitad
 
 #Django
@@ -13,6 +13,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Count, Q
 
 #reportlabs para PDF
 from reportlab.lib.pagesizes import A4
@@ -28,7 +30,7 @@ from .analisis_ia import main_analisis_ia
 from .forms import CustomUserCreationForm, ScanForm  # Importar nuestro formulario personalizado
 
 #Models
-from .models import Escaneo, resultadoModulo
+from .models import Escaneo, resultadoModulo, User
 
 
 def index_view(request): # el escaneo se hace aqui
@@ -358,3 +360,109 @@ class CustomPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, '¡Contraseña actualizada exitosamente!')
         return super().form_valid(form)
+    
+
+"""
+=============================== VISTAS ADMINISTRADOR ===============================
+Estas vistas son accesibles solo para usuarios administradores (is_staff=True).
+"""
+    
+# Función para verificar si el usuario es administrador
+def admin_required(User):
+    return User.is_staff
+
+@login_required
+@user_passes_test(admin_required, login_url='/')
+def admin_dashboard_view(request):
+    """
+    Dashboard principal del administrador con estadísticas generales.
+    """
+    # Estadísticas generales
+    total_usuarios = User.objects.count()
+    usuarios_activos = User.objects.filter(is_active=True).count()
+    total_escaneos = Escaneo.objects.count()
+    
+    # Escaneos por estado
+    escaneos_completados = Escaneo.objects.filter(estado='completado').count()
+    escaneos_pendientes = Escaneo.objects.filter(estado='pendiente').count()
+    escaneos_en_proceso = Escaneo.objects.filter(estado='en_proceso').count()
+    escaneos_error = Escaneo.objects.filter(estado='error').count()
+    
+    # Escaneos recientes (últimos 7 días)
+    hace_7_dias = datetime.now() - timedelta(days=7)
+    escaneos_recientes = Escaneo.objects.filter(
+        fecha_inicio__gte=hace_7_dias
+    ).count()
+    
+    # Top 5 usuarios con más escaneos
+    top_usuarios = User.objects.annotate(
+        num_escaneos=Count('escaneos')
+    ).order_by('-num_escaneos')[:5]
+    
+    # Últimos 5 escaneos
+    ultimos_escaneos = Escaneo.objects.select_related('user').order_by('-fecha_inicio')[:5]
+    
+    context = {
+        'total_usuarios': total_usuarios,
+        'usuarios_activos': usuarios_activos,
+        'total_escaneos': total_escaneos,
+        'escaneos_completados': escaneos_completados,
+        'escaneos_pendientes': escaneos_pendientes,
+        'escaneos_en_proceso': escaneos_en_proceso,
+        'escaneos_error': escaneos_error,
+        'escaneos_recientes': escaneos_recientes,
+        'top_usuarios': top_usuarios,
+        'ultimos_escaneos': ultimos_escaneos,
+    }
+    
+    return render(request, 'admin/dashboard.html', context)
+
+@login_required
+@user_passes_test(admin_required, login_url='/')
+def admin_usuarios_view(request):
+    """
+    Lista de todos los usuarios con opción de activar/desactivar.
+    """
+    usuarios = User.objects.annotate(
+        num_escaneos=Count('escaneos')
+    ).order_by('-date_joined')
+    
+    return render(request, 'admin/usuarios.html', {'usuarios': usuarios})
+
+
+@login_required
+@user_passes_test(admin_required, login_url='/')
+def admin_escaneos_view(request):
+    """
+    Lista de todos los escaneos del sistema.
+    """
+    # Esta vista solo renderiza el HTML, los datos se cargan con JavaScript
+    return render(request, 'admin/escaneos.html')
+
+
+@login_required
+@user_passes_test(admin_required, login_url='/')
+def admin_toggle_user(request, user_id):
+    """
+    API para activar/desactivar usuarios.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    user = get_object_or_404(User, id=user_id)
+    
+    # No permitir desactivarse a sí mismo
+    if user.id == request.user.id:
+        return JsonResponse({
+            'error': 'No puedes desactivar tu propia cuenta'
+        }, status=400)
+    
+    # Toggle
+    user.is_active = not user.is_active
+    user.save()
+    
+    return JsonResponse({
+        'success': True,
+        'is_active': user.is_active,
+        'message': f'Usuario {"activado" if user.is_active else "desactivado"} correctamente'
+    })

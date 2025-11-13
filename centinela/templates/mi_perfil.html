@@ -308,10 +308,14 @@ function clearErrors() {
 function showAlert(type, message) {
     const alertBox = document.getElementById('alertBox');
     const alertMessage = document.getElementById('alertMessage');
-
-    alertBox.classList.remove('d-none');
     
-    alertBox.className = `alert alert-${type} alert-dismissible fade show`;
+    // Limpiar TODAS las clases y empezar de cero
+    alertBox.className = '';
+    
+    // Agregar solo las clases necesarias
+    alertBox.classList.add('alert', `alert-${type}`, 'alert-dismissible', 'fade', 'show', 'mb-4');
+    
+    // Establecer mensaje
     alertMessage.textContent = message;
     
     // Auto-ocultar después de 5 segundos
@@ -323,9 +327,11 @@ function showAlert(type, message) {
 // Cerrar alerta
 function closeAlert() {
     const alertBox = document.getElementById('alertBox');
+    
+    // Remover 'show' para animación de salida
     alertBox.classList.remove('show');
     
-    // Esperar a que termine la animación antes de ocultar
+    // Después de la animación, ocultar completamente
     setTimeout(() => {
         alertBox.classList.add('d-none');
     }, 150);

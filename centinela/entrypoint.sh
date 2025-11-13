@@ -16,6 +16,9 @@ else
     # Aplicar migraciones de Django (solo para web)
     echo "Aplicando migraciones de Django..."
     python manage.py migrate --noinput
+    # Crear superusuario admin si no existe
+    echo "Verificando existencia de superusuario admin..."
+    python manage.py shell < create_admin.py
     
     echo "Iniciando servidor Django..."
     exec "$@"

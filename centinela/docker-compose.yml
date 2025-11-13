@@ -17,6 +17,7 @@ services:
     depends_on:
       - db
       - redis
+      - mailpit
 
   # Worker normal (cola default)
   celery_worker_default:
@@ -75,6 +76,17 @@ services:
       retries: 5
     volumes:
       - mysql_data:/var/lib/mysql
+
+  # Servicio de correos en desarrollo Mailpit
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit_service
+    ports:
+      - "8025:8025"  # Interfaz web de Mailpit
+      - "1025:1025"  # Puerto SMTP para enviar correos
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"
 
 volumes:
   mysql_data:

@@ -14,21 +14,23 @@
 
 {% block header_links %}
     {% with link_class="text-decoration-none text-white fs-5 nav-link fw-bold" %}
-    <a href="{% url 'index_view' %}" class="{{ link_class }}">
-        <i class="bi bi-search"></i>
-        Escanear | </a>
-    <a href="{% url 'admin:dashboard' %}" class="{{ link_class }}">
+
+    <a href="{% url 'admin_dashboard' %}" class="{{ link_class }}">
         <i class="bi bi-bar-chart-fill"></i>
         Dashboard | </a>
-    <a href="{% url 'admin:users' %}" class="{{ link_class }}">
+
+    <a href="{% url 'admin_usuarios' %}" class="{{ link_class }}">
         <i class="bi bi-person"></i>
         Usuarios | </a>
-    <a href="{% url 'admin:escaneos' %}" class="{{ link_class }}">
+
+    <a href="{% url 'admin_escaneos' %}" class="{{ link_class }}">
         <i class="bi bi-file-earmark-text"></i>
         Escaneos | </a>
+
     <a href="{% url 'mi_perfil_view' %}" class="{{ link_class }}">
         <i class="bi bi-person"></i>
         Perfil</a>
+
     {% endwith %}
 {% endblock %}
 

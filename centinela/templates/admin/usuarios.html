@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 bg-primary text-white p-4 rounded shadow-sm">
+            <h2>
+                <i class="bi bi-people text-white"></i> 
+                Gestión de Usuarios
+            </h2>
+            <p class="text-white fw-bold fs-5">Administrar acceso y permisos de usuarios</p>
+        </div>
+    </div>
+
+    <!-- Alerta -->
+    <div id="alertBox" class="alert alert-dismissible fade d-none mb-4" role="alert">
+        <span id="alertMessage"></span>
+        <button type="button" class="btn-close" onclick="closeAlert()"></button>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Escaneos</th>
+                            <th>Fecha Registro</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr id="user-row-{{ usuario.id }}">
+                            <td>{{ usuario.id }}</td>
+                            <td>
+                                <i class="bi bi-person-circle text-primary me-2"></i>
+                                <strong>{{ usuario.username }}</strong>
+                                {% if usuario.is_staff %}
+                                    <span class="badge bg-danger ms-2">Admin</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ usuario.email }}</td>
+                            <td>
+                                <span class="badge bg-info">{{ usuario.num_escaneos }}</span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {{ usuario.date_joined|date:"d/m/Y" }}
+                                </small>
+                            </td>
+                            <td id="status-{{ usuario.id }}">
+                                {% if usuario.is_active %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Activo
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle"></i> Inactivo
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if usuario.id != request.user.id %}
+                                <button 
+                            
+                                    class="btn btn-sm {% if usuario.is_active %}btn-danger{% else %}btn-success{% endif %}"
+                                    onclick="toggleUser({{ usuario.id }}, {{ usuario.is_active|yesno:'true,false' }})"
+                                    id="toggle-btn-{{ usuario.id }}">
+                                    <i class="bi bi-{% if usuario.is_active %}x-circle{% else %}check-circle{% endif %}"></i>
+                                    {% if usuario.is_active %}Desactivar{% else %}Activar{% endif %}
+                                </button>
+                                {% else %}
+                                <span class="text-muted">Tú</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No hay usuarios registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let alertTimeout = null;
+
+async function toggleUser(userId, isActive) {
+    const btn = document.getElementById(`toggle-btn-${userId}`);
+    const originalText = btn.innerHTML;
+    
+    // Deshabilitar botón
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+    
+    try {
+        const response = await fetch(`/api/admin/usuarios/${userId}/toggle/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            // Actualizar estado visual
+            const statusBadge = document.getElementById(`status-${userId}`);
+            if (result.is_active) {
+                statusBadge.innerHTML = '<span class="badge bg-success"><i class="bi bi-check-circle"></i> Activo</span>';
+                btn.className = 'btn btn-sm btn-danger';
+                btn.innerHTML = '<i class="bi bi-x-circle"></i> Desactivar';
+            } else {
+                statusBadge.innerHTML = '<span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Inactivo</span>';
+                btn.className = 'btn btn-sm btn-success';
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Activar';
+            }
+            
+            showAlert('success', result.message);
+        } else {
+            showAlert('danger', result.error || 'Error al cambiar estado del usuario');
+            btn.innerHTML = originalText;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('danger', 'Error de conexión');
+        btn.innerHTML = originalText;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function showAlert(type, message) {
+    const alertBox = document.getElementById('alertBox');
+    const alertMessage = document.getElementById('alertMessage');
+    
+    if (alertTimeout) {
+        clearTimeout(alertTimeout);
+    }
+    
+    alertBox.className = '';
+    alertBox.classList.add('alert', `alert-${type}`, 'alert-dismissible', 'fade', 'show', 'mb-4');
+    alertMessage.textContent = message;
+    
+    alertTimeout = setTimeout(() => {
+        closeAlert();
+    }, 5000);
+}
+
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    if (alertBox) {
+        alertBox.classList.remove('show');
+        setTimeout(() => {
+            alertBox.classList.add('d-none');
+        }, 150);
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
