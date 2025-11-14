@@ -80,9 +80,11 @@ class UserViewSet(viewsets.ModelViewSet):
 # ViewSet para Escaneo
 # Serializador
 class EscaneoSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')  # campo adicional para mostrar el nombre de usuario
+    email = serializers.EmailField(source='user.email')      # campo adicional para mostrar el email del usuario
     class Meta:
         model = Escaneo
-        fields = ['id', 'user', 'objetivo', 'tipo_objetivo', 'fecha_inicio', 'fecha_fin', 'estado']
+        fields = ['id', 'user', 'username', 'email', 'objetivo', 'tipo_objetivo', 'fecha_inicio', 'fecha_fin', 'estado']
 
 # Clase de paginación personalizada
 class EscaneoPagination(PageNumberPagination):
