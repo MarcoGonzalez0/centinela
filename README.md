@@ -37,6 +37,11 @@ cd centinela
 Renombrar `.env.example` a `.env`
 y completar las variables necesarias.
 
+```bash
+cp .env.example .env
+```
+
+
 ### 3. Levantar el proyecto
 
 ```bash
