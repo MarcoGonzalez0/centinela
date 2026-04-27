@@ -51,6 +51,7 @@ El sistema automáticamente:
 ## Acceso
 
 - Django: http://localhost:8000
+- Registrarse y utilizar
 
 ## Uso
 
