@@ -29,6 +29,7 @@ El sistema recibe la dirección de una página web, analiza los módulos selecci
 ```bash
 git clone https://github.com/MarcoGonzalez0/centinela.git
 cd centinela
+cd centinela
 ```
 
 ### 2. Configurar variables de entorno
